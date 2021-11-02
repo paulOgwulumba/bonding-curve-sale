@@ -1,29 +1,72 @@
-import {loadStdlib} from '@reach-sh/stdlib';
+import { loadStdlib } from '@reach-sh/stdlib';
 import * as backend from './build/index.main.mjs';
+import { ask, yesno, done } from '@reach-sh/stdlib/ask.mjs';
+
 const stdlib = loadStdlib(process.env);
 
 (async () => {
-  const startingBalance = stdlib.parseCurrency(100);
+  /**
+   * @description Starting balance of user (Strictly for testing purposes).
+   */
+  const startingBalance = stdlib.parseCurrency(10);
 
-  const [ accAlice, accBob ] =
-    await stdlib.newTestAccounts(2, startingBalance);
-  console.log('Hello, Alice and Bob!');
+  /**
+   * @description Name of the current user.
+   */
+  const nameOfUser = await ask('What is your name?', x => x);
+
+  /**
+   * @description Account of user. It is initiated to have the 'startingBalance'
+   */
+  const accUser = await stdlib.newTestAccount(startingBalance);
+
+  // prompt user if they want to create new token or buy one that exists
+  // an omega user is one that creates a new token
+  /**
+   * @description Holds true if current user is an Omega User.
+   */
+  const isOmegaUser = await ask(
+    `Hello ${nameOfUser}, would you like to create a new token? (saying no is an indication that you want to buy an existing one)`,
+    yesno
+  );
 
   console.log('Launching...');
-  const ctcAlice = accAlice.deploy(backend);
-  const ctcBob = accBob.attach(backend, ctcAlice.getInfo());
 
-  console.log('Starting backends...');
-  await Promise.all([
-    backend.Alice(ctcAlice, {
-      ...stdlib.hasRandom,
-      // implement Alice's interact object here
-    }),
-    backend.Bob(ctcBob, {
-      ...stdlib.hasRandom,
-      // implement Bob's interact object here
-    }),
-  ]);
+  /**
+   * @description Contract instance for the dapp.
+   */
+  let contract = null;
 
-  console.log('Goodbye, Alice and Bob!');
+  // display initial balance before contract deployment.
+  console.log(`Your current balance is ${formatCurrency(await stdlib.balanceOf(accUser))}`);
+
+  // if user is an omega user, create a new contract.
+  if (isOmegaUser) {
+    contract = accUser.contract(backend);
+  }
+
+  console.log('Starting backend...');
+  backend.User(contract, {
+    // implement Alice's interact object here
+    ...stdlib.hasRandom,
+    name: 26,
+  });
+
+  // display balance after contract deployment.
+  console.log(`Your balance after contract deployment is ${formatCurrency(await stdlib.balanceOf(accUser))}`);
+
+  console.log(`Here comes the contract information!!`);
+  const address = await contract.getInfo();
+  console.log(JSON.stringify(address));
+
+  console.log('Goodbye');
 })();
+
+/**
+ * @description Formats the currency amount to 4 decimal places.
+ * @param amount Amount of currency to be formatted.
+ * @returns Formatted number.
+ */
+function formatCurrency(amount) {
+  return stdlib.formatCurrency(amount, 4);
+}
