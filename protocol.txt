@@ -1,0 +1,14 @@
+1. user indicates whether they want to create a new token or buy another that already exists.
+  a. user decides to create new token
+    i. user provides token name, token starting price, number of tokens to be created.
+    ii. contract is created for this token and contract address is provided.
+    iii. other users can buy token. price changes as available tokens get fewer.
+
+  b. user decides to buy an existing token
+    i. user provides contract address for the token they want to buy.
+    ii. user is asked if they want to create a new wallet for the token or if they have one already.
+      1. if they have one, they are asked to provide wallet address.
+      2. if they want to create a new wallet, one is created for them and the wallet address is displayed.
+    iii. current price of token and total available number of tokens is displayed.
+    iv. user indicates the number of tokens they want to buy.
+    v. if transaction is valid, it is completed and wallet of user is credited and its balance is shown.

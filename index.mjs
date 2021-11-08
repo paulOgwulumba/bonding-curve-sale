@@ -8,7 +8,7 @@ const stdlib = loadStdlib(process.env);
   /**
    * @description Starting balance of user (Strictly for testing purposes).
    */
-  const startingBalance = stdlib.parseCurrency(10);
+  const startingBalance = stdlib.parseCurrency(100);
 
   /**
    * @description Name of the current user.
@@ -26,7 +26,7 @@ const stdlib = loadStdlib(process.env);
    * @description Holds true if current user is an Omega User.
    */
   const isOmegaUser = await ask(
-    `Hello ${nameOfUser}, would you like to create a new token? (saying no is an indication that you want to buy an existing one)`,
+    `Hello ${nameOfUser}, would you like to create a new token?`,
     yesno
   );
 
@@ -36,20 +36,30 @@ const stdlib = loadStdlib(process.env);
    * @description Contract instance for the dapp.
    */
   let contract = null;
-
+  let tokName = null;
+  let tokSymbol = null;
+  let tokAmount = null;
   // display initial balance before contract deployment.
   console.log(`Your current balance is ${formatCurrency(await stdlib.balanceOf(accUser))}`);
 
   // if user is an omega user, create a new contract.
   if (isOmegaUser) {
     contract = accUser.contract(backend);
+    tokName =  await ask("What would you like to call the token?", x => x);
+    tokSymbol =  await ask("Choose a character symbol for the token?", x => x);
+    tokAmount =  await ask("How much of the token do u want to create?", x => x)
+  } else{
+    console.log(`Your balance after is ${formatCurrency(await stdlib.balanceOf(accUser))}`);
+    process.exit(0)
   }
 
   console.log('Starting backend...');
-  backend.User(contract, {
-    // implement Alice's interact object here
+  backend.OmegaUser(contract, {
     ...stdlib.hasRandom,
-    name: 26,
+    name: nameOfUser,
+    tokenName: tokName,
+    tokenSymbol: tokSymbol,
+    tokenAmount: tokAmount,
   });
 
   // display balance after contract deployment.

@@ -1,0 +1,11 @@
+1.  Ask user if he wants to create a token or not
+  if(yes) ->  <make user the head principal
+              <create account for user with 100 network tokens
+              <display account content
+              <ask user for details of new token
+              <create token and display token details 
+  if(no)  ->  <ask for contract address for already created token
+              <create account for user with 100 network tokens
+              <display account content
+              <display contract details
+  
