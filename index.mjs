@@ -39,37 +39,57 @@ const stdlib = loadStdlib(process.env);
   let tokName = null;
   let tokSymbol = null;
   let tokAmount = null;
+  let abeg = null;
   // display initial balance before contract deployment.
   console.log(`Your current balance is ${formatCurrency(await stdlib.balanceOf(accUser))}`);
-
-  // if user is an omega user, create a new contract.
+  // if user is an omega user, create a new contract, else attach to already existing contract using contract info
   if (isOmegaUser) {
     contract = accUser.contract(backend);
-    tokName =  await ask("What would you like to call the token?", x => x);
-    tokSymbol =  await ask("Choose a character symbol for the token?", x => x);
-    tokAmount =  await ask("How much of the token do u want to create?", x => x)
+    
+    // display balance after contract deployment.
+    console.log(`Your balance after contract deployment is ${formatCurrency(await stdlib.balanceOf(accUser))}`);
+
+    // display contract information
+    contract.getInfo().then((info) => {
+      console.log(`The contract address is ${JSON.stringify(info)}`);
+    });
   } else{
-    console.log(`Your balance after is ${formatCurrency(await stdlib.balanceOf(accUser))}`);
-    process.exit(0)
+    const info = await ask(
+      `Please paste the contract information:`,
+      JSON.parse
+    );
+    contract = accUser.attach(backend, info);
+    console.log(`Your balance after connecting to the contract is ${formatCurrency(await stdlib.balanceOf(accUser))}`);
   }
 
-  console.log('Starting backend...');
-  backend.OmegaUser(contract, {
-    ...stdlib.hasRandom,
-    name: nameOfUser,
-    tokenName: tokName,
-    tokenSymbol: tokSymbol,
-    tokenAmount: tokAmount,
-  });
+  const interact = { ...stdlib.hasRandom };
+  //Define interact information for both principals
+  interact.name = nameOfUser
+  if (isOmegaUser){
+    // tokName =  await ask("What would you like to call the token?", x => x);
+    // tokSymbol =  await ask("Choose a character symbol for the token?", x => x);
+    // tokAmount =  await ask("How much of the token do u want to create?", x => x)
+    abeg = await ask("How much do you want to beg for?", stdlib.parseCurrency)
+    interact.abeg = abeg;
+  } else{
+    
+    interact.payAbeg = async (abeg) => {
+      const payAbeg = await ask(`Would you like to pay ${abeg} to the host? (Y/n)`, yesno)
+      if(!payAbeg){
+        process.exit(0)
+      }
+    }
+  }
 
-  // display balance after contract deployment.
-  console.log(`Your balance after contract deployment is ${formatCurrency(await stdlib.balanceOf(accUser))}`);
+  interact.showBalance = async () => {
+    console.log(`Your balance is ${formatCurrency(await stdlib.balanceOf(accUser))}`);
+  }
 
-  console.log(`Here comes the contract information!!`);
-  const address = await contract.getInfo();
-  console.log(JSON.stringify(address));
+  const part = isOmegaUser ? backend.OmegaUser : backend.NormalUser;
+  await part(contract, interact);
 
   console.log('Goodbye');
+  process.exit(0);
 })();
 
 /**
