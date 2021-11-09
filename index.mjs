@@ -26,7 +26,7 @@ const stdlib = loadStdlib(process.env);
    * @description Holds true if current user is an Omega User.
    */
   const isOmegaUser = await ask(
-    `Hello ${nameOfUser}, would you like to create a new token?`,
+    `Hello ${nameOfUser}, would you like to create a new contract?`,
     yesno
   );
 
@@ -40,8 +40,12 @@ const stdlib = loadStdlib(process.env);
   let tokSymbol = null;
   let tokAmount = null;
   let abeg = null;
+
+  const fmt = (x) => stdlib.formatCurrency(x, 4);
+
   // display initial balance before contract deployment.
   console.log(`Your current balance is ${formatCurrency(await stdlib.balanceOf(accUser))}`);
+
   // if user is an omega user, create a new contract, else attach to already existing contract using contract info
   if (isOmegaUser) {
     contract = accUser.contract(backend);
@@ -53,7 +57,8 @@ const stdlib = loadStdlib(process.env);
     contract.getInfo().then((info) => {
       console.log(`The contract address is ${JSON.stringify(info)}`);
     });
-  } else{
+  } 
+  else{
     const info = await ask(
       `Please paste the contract information:`,
       JSON.parse
@@ -63,6 +68,7 @@ const stdlib = loadStdlib(process.env);
   }
 
   const interact = { ...stdlib.hasRandom };
+
   //Define interact information for both principals
   interact.name = nameOfUser
   if (isOmegaUser){
@@ -72,9 +78,8 @@ const stdlib = loadStdlib(process.env);
     abeg = await ask("How much do you want to beg for?", stdlib.parseCurrency)
     interact.abeg = abeg;
   } else{
-    
     interact.payAbeg = async (abeg) => {
-      const payAbeg = await ask(`Would you like to pay ${abeg} to the host? (Y/n)`, yesno)
+      const payAbeg = await ask(`Would you like to pay ${fmt(abeg)} to the host? (Y/n)`, yesno)
       if(!payAbeg){
         process.exit(0)
       }
@@ -89,7 +94,6 @@ const stdlib = loadStdlib(process.env);
   await part(contract, interact);
 
   console.log('Goodbye');
-  process.exit(0);
 })();
 
 /**

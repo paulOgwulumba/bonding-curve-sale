@@ -41,7 +41,6 @@ export const main = Reach.App(() => {
   // tok.burn();
   // assert(tok.destroyed() == false);
   commit()
-
   NormalUser.only(() => {
     const NormalName = declassify(interact.name);
     interact.payAbeg(abeg);
