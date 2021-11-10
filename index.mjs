@@ -77,6 +77,10 @@ const stdlib = loadStdlib(process.env);
     // tokAmount =  await ask("How much of the token do u want to create?", x => x)
     abeg = await ask("How much do you want to beg for?", stdlib.parseCurrency)
     interact.abeg = abeg;
+    interact.keepOpen = async () =>{
+      const keepOpen = await ask("Do you want to keep the contract open? (Y/n)", yesno)
+      return keepOpen;
+    }
   } else{
     interact.payAbeg = async (abeg) => {
       const payAbeg = await ask(`Would you like to pay ${fmt(abeg)} to the host? (Y/n)`, yesno)

@@ -13,8 +13,9 @@ export const main = Reach.App(() => {
     tokenSymbol: Bytes(8),
     tokenAmount: UInt,
     abeg: UInt,
+    keepOpen: Fun([], Bool)
   });
-  const NormalUser = Participant('NormalUser', {
+  const NormalUser = ParticipantClass('NormalUser', {
     ...User,
     name: Bytes(64),
     payAbeg: Fun([UInt], Null)
@@ -40,18 +41,32 @@ export const main = Reach.App(() => {
   // assert(tok.supply() == supply - tokenAmount);
   // tok.burn();
   // assert(tok.destroyed() == false);
-  commit()
-  NormalUser.only(() => {
-    const NormalName = declassify(interact.name);
-    interact.payAbeg(abeg);
-  })
-  NormalUser.publish(NormalName)
-      .pay(abeg);
+  // commit()
 
-  transfer(abeg).to(OmegaUser);
-  commit()
 
-  each([OmegaUser, NormalUser], () => {
-    interact.showBalance();
-  });
+  var payers =  0;
+  invariant( balance() == 0)
+  while(true){
+    commit()
+
+    NormalUser.only(() =>{
+      const NormalName = declassify(interact.name);
+      declassify(interact.payAbeg(abeg))
+    })
+    NormalUser.publish()
+      .pay(abeg)
+    transfer(abeg).to(OmegaUser);
+    commit()
+
+    each([OmegaUser, NormalUser], () => {
+      declassify(interact.showBalance());
+    });
+
+    race(NormalUser, OmegaUser).publish();
+
+    payers =  payers + 1 
+    continue
+  }
+
+  commit();
 });
