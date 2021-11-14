@@ -1,7 +1,7 @@
 'reach 0.1';
 
 const User = {
-  showBalance: Fun([], Null),
+  showBalance: Fun([Token], Null),
   ...hasRandom,
 }
 
@@ -9,16 +9,16 @@ export const main = Reach.App(() => {
   const OmegaUser = Participant('OmegaUser', {
     ...User,
     name: Bytes(64),
-    tokenName: Bytes(32),
-    tokenSymbol: Bytes(8),
-    tokenAmount: UInt,
-    abeg: UInt,
+    tokenPrice: UInt,
+    paidBy: Fun([Bytes(64), UInt, UInt], Null), //<(name, amount-of-n-token, price-of-n-n-token)
     keepOpen: Fun([], Bool)
   });
+
   const NormalUser = ParticipantClass('NormalUser', {
     ...User,
     name: Bytes(64),
-    payAbeg: Fun([UInt], Null)
+    displayPrice: Fun([UInt], Null),
+    buyToken: Fun([], UInt)
   })
   deploy();
 
@@ -26,47 +26,67 @@ export const main = Reach.App(() => {
 
   OmegaUser.only(() => {
     const name = declassify(interact.name);
-    const abeg = declassify(interact.abeg)
-    // const tokenName = declassify(interact.tokenName)
-    // const tokenSymbol = declassify(interact.tokenSymbol)
-    // const tokenAmount = declassify(interact.tokenAmount)
+    
   });
-  // OmegaUser.publish(name, tokenName, tokenSymbol, tokenAmount);
-  OmegaUser.publish(name, abeg);
-  //Create token
-  // const supply = 2 * tokenAmount;
-  // const tok = new Token({ name: tokenName, symbol: tokenSymbol, supply: supply});
-  // transfer(tokenAmount, tok).to(OmegaUser);
-  // tok.burn(tokenAmount);
-  // assert(tok.supply() == supply - tokenAmount);
-  // tok.burn();
-  // assert(tok.destroyed() == false);
-  // commit()
+  OmegaUser.publish(name);
 
+  // Create token
+  const supply = UInt.max;
+  const tok = new Token({ name: '01234567890123456789012345678901', symbol: '01234567', supply: supply});
+  const tokenPrice = 2
 
-  var payers =  0;
-  invariant( balance() == 0)
+  
+  var totalBought = 0
+  invariant( balance() == totalBought)
   while(true){
     commit()
 
     NormalUser.only(() =>{
-      const NormalName = declassify(interact.name);
-      declassify(interact.payAbeg(abeg))
+      const normalName = declassify(interact.name);
+      declassify(interact.displayPrice(tokenPrice))
+      const tokenToBuy = declassify(interact.buyToken())
+      const totalPrice = tokenToBuy * tokenPrice
+      const NormAccount = this
     })
-    NormalUser.publish()
-      .pay(abeg)
-    transfer(abeg).to(OmegaUser);
+    NormalUser.publish(normalName, tokenToBuy, totalPrice, NormAccount)
+      .pay(totalPrice)
+    // transfer(tokenToBuy, tok).to(NormAccount);
     commit()
 
-    each([OmegaUser, NormalUser], () => {
-      declassify(interact.showBalance());
-    });
+    OmegaUser.only(() => {
+      declassify(interact.paidBy(normalName, tokenToBuy, tokenPrice));
+    })
+    OmegaUser.publish()
+    commit()
 
-    race(NormalUser, OmegaUser).publish();
-
-    payers =  payers + 1 
+    NormalUser.only(() =>{
+      declassify(interact.showBalance(tok));
+    })
+    NormalUser.publish()
+    commit()
+    
+    OmegaUser.only(() =>{
+      const breakLoop = declassify(interact.keepOpen())
+    })
+    OmegaUser.publish(breakLoop)
+    // each([OmegaUser, NormalUser], () => {
+    //   declassify(interact.showBalance());
+    // });
+    
+    totalBought =  totalBought + totalPrice
     continue
   }
 
+  transfer(totalBought).to(OmegaUser);
+  tok.burn(tok.supply());
+  // assert(tok.supply() == supply - 100);
+  tok.burn();
+  assert(tok.destroyed() == false);
   commit();
+
+  OmegaUser.only(() => {
+    declassify(interact.showBalance(tok));
+  })
+  OmegaUser.publish()
+  commit()
 });
