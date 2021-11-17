@@ -2,91 +2,113 @@
 
 const User = {
   showBalance: Fun([Token], Null),
+  displayTokenDetails: Fun([UInt, UInt], Null), //(supply, price)
   ...hasRandom,
-}
+};
+const gotHere = "got here";
+
+const Logger = {
+  logString: Fun([Bytes(8)], Null),
+  logInt: Fun([UInt], Null),
+  logBool: Fun([Bool], Null)
+};
+/**
+ * 
+ * @param totalSupply Supply of non-network token in contract
+ * @returns Price of non-network token w.r.t network token
+ */
+const updatePrice = (totalSupply) => {
+  return 50000/totalSupply;
+};
 
 export const main = Reach.App(() => {
   const OmegaUser = Participant('OmegaUser', {
     ...User,
     name: Bytes(64),
-    tokenPrice: UInt,
     paidBy: Fun([Bytes(64), UInt, UInt], Null), //<(name, amount-of-n-token, price-of-n-n-token)
-    keepOpen: Fun([], Bool)
+    ...Logger
   });
 
   const NormalUser = ParticipantClass('NormalUser', {
     ...User,
     name: Bytes(64),
-    displayPrice: Fun([UInt], Null),
-    buyToken: Fun([], UInt)
-  })
+    buyToken: Fun([], UInt),
+    notEnoughToken: Fun([], Null)
+  });
   deploy();
 
-  // write your program here
+  //Contract flow starts here
 
   OmegaUser.only(() => {
     const name = declassify(interact.name);
-    
   });
   OmegaUser.publish(name);
 
   // Create token
-  const supply = UInt.max;
+  const supply = 10000;
   const tok = new Token({ name: '01234567890123456789012345678901', symbol: '01234567', supply: supply});
-  const tokenPrice = 2
-
-  
-  var totalBought = 0
-  invariant( balance() == totalBought)
-  while(true){
-    commit()
-
-    NormalUser.only(() =>{
-      const normalName = declassify(interact.name);
-      declassify(interact.displayPrice(tokenPrice))
-      const tokenToBuy = declassify(interact.buyToken())
-      const totalPrice = tokenToBuy * tokenPrice
-      const NormAccount = this
-    })
-    NormalUser.publish(normalName, tokenToBuy, totalPrice, NormAccount)
-      .pay(totalPrice)
-    // transfer(tokenToBuy, tok).to(NormAccount);
-    commit()
-
-    OmegaUser.only(() => {
-      declassify(interact.paidBy(normalName, tokenToBuy, tokenPrice));
-    })
-    OmegaUser.publish()
-    commit()
-
-    NormalUser.only(() =>{
-      declassify(interact.showBalance(tok));
-    })
-    NormalUser.publish()
-    commit()
-    
-    OmegaUser.only(() =>{
-      const breakLoop = declassify(interact.keepOpen())
-    })
-    OmegaUser.publish(breakLoop)
-    // each([OmegaUser, NormalUser], () => {
-    //   declassify(interact.showBalance());
-    // });
-    
-    totalBought =  totalBought + totalPrice
-    continue
-  }
-
-  transfer(totalBought).to(OmegaUser);
-  tok.burn(tok.supply());
-  // assert(tok.supply() == supply - 100);
-  tok.burn();
-  assert(tok.destroyed() == false);
+  const tokenPrice = updatePrice(balance(tok));
   commit();
 
+  //Display minted token's supply and price to Omega user
   OmegaUser.only(() => {
-    declassify(interact.showBalance(tok));
-  })
-  OmegaUser.publish()
-  commit()
-});
+    declassify(interact.displayTokenDetails(balance(tok), tokenPrice));
+  });
+  OmegaUser.publish();
+
+  var [ totalBought, totalPaid ]  = [ 0, 0 ]; //total amount of non-network tokens paid for, total amount of network tokens spent
+  invariant( (supply == balance(tok) + totalBought) && (balance() == totalPaid ));
+  while(totalBought <= supply){
+    commit();
+
+    //Normal User gets and publishes their name and account address and gets shown token details 
+    NormalUser.only(() => {
+      const normalName = declassify(interact.name);
+      const newPrice = updatePrice(balance(tok));
+      const normalUserAccount = this;
+      declassify(interact.displayTokenDetails(balance(tok), updatePrice(balance(tok))));
+      const buyTok = declassify(interact.buyToken());
+    });
+    NormalUser.publish(normalName, normalUserAccount, buyTok, newPrice);
+    OmegaUser.interact.logInt(buyTok)
+    const tokToPay = buyTok * newPrice;
+
+    if(buyTok < balance(tok)){
+      commit();
+      OmegaUser.interact.logString(gotHere)
+      NormalUser.pay(tokToPay);
+      OmegaUser.interact.logString(gotHere)
+      transfer(buyTok, tok).to(normalUserAccount);
+      commit()
+
+      OmegaUser.only(() => {
+        declassify(interact.displayTokenDetails(balance(tok), updatePrice(balance(tok))));
+      });
+      OmegaUser.publish();
+
+      [ totalBought, totalPaid ] = [ totalBought + buyTok, totalPaid + tokToPay ];
+      continue;
+    } else{
+      commit();
+      NormalUser.only(() => {
+        interact.notEnoughToken();
+      });
+      NormalUser.publish();
+
+      [ totalBought, totalPaid ] = [ totalBought, totalPaid ];
+      continue;
+    }
+    
+  }
+  
+  transfer(totalPaid).to(OmegaUser)
+  assert(balance() == 0)
+  assert(balance(tok) == 0);
+  tok.burn(tok.supply());
+
+  if (!tok.destroyed()) {
+    tok.destroy();
+  }
+  assert(tok.destroyed() == true);
+  commit();
+})

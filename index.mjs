@@ -8,7 +8,7 @@ const stdlib = loadStdlib(process.env);
   /**
    * @description Starting balance of user (Strictly for testing purposes).
    */
-  const startingBalance = stdlib.parseCurrency(100);
+  const startingBalance = stdlib.parseCurrency(1000);
 
   /**
    * @description Name of the current user.
@@ -40,14 +40,9 @@ const stdlib = loadStdlib(process.env);
 
   const fmt = (x) => stdlib.formatCurrency(x, 4);
 
-  // display initial balance before contract deployment.
-  console.log(`Your current balance is ${formatCurrency(await stdlib.balanceOf(accUser))}`);
-
   // if user is an omega user, create a new contract, else attach to already existing contract using contract info
   if (isOmegaUser) {
     contract = accUser.contract(backend);
-    
-    // display balance after contract deployment.
     console.log(`Contract is launching...`);
 
     // display contract information
@@ -69,22 +64,35 @@ const stdlib = loadStdlib(process.env);
   //Define interact information for both principals
   interact.name = nameOfUser
   if (isOmegaUser){
-    // tokName =  await ask("What would you like to call the token?", x => x);
-    // tokSymbol =  await ask("Choose a character symbol for the token?", x => x);
-    // tokAmount =  await ask("How much of the token do u want to create?", x => x)
-    tokenPrice = await ask("How much is the price of the new token (in network-tokens)?", stdlib.parseCurrency)
-    interact.tokenPrice = tokenPrice;
-    interact.keepOpen = async () =>{
-      const keepOpen = await ask("Do you want to keep the contract open? (Y/n)", yesno)
-      return keepOpen;
-    }
+    /**
+     * @description displays amount of non-network tokens paid for by user and amount of network tokens it cost
+     * @param name Name of User that paid to contract
+     * @param amount Amount of tokens paid to contract 
+     * @param price Price of non-network token
+     */
     interact.paidBy = (name, amount, price) => {
       console.log(`${name} paid for ${fmt(amount)} non-network tokens with ${fmt(amount*price)} network tokens`)
     }
-  } else{
-    interact.displayPrice = (price) => {
-      console.log(`The price of one non-network token = ${price} network tokens`)
+
+    /**
+     * @description Loggers for the backend
+     * 
+     */
+    interact.logString = (value) => {
+      console.log(`String log: ${value}`)
     }
+    interact.logInt = (value) => {
+      console.log(`Integer log: ${value}`)
+    }
+    interact.logBool = (value) => {
+      console.log(`Boolean log: ${value}`)
+    }
+  } else{
+
+    /**
+     * @description Asks user if they want to buy a no-network token, then asks for how much of it they want
+     * @returns Number of non-network tokens user wants to buy
+     */
     interact.buyToken = async () => {
       const willBuy = await ask(`Would you like to buy non-network tokens? (Y/n)`, yesno)
       if(!willBuy){
@@ -93,10 +101,27 @@ const stdlib = loadStdlib(process.env);
       const numberOfToks = await ask(`How many non-network tokens would you like to buy?`, stdlib.parseCurrency)
       return numberOfToks
     }
+
+    interact.notEnoughToken = () => {
+      console.log(`There aren't enough tokens for the amount you want to buy`)
+    }
   }
 
+  /**
+   * @description Displays details of the token on the console
+   * @param supply amount of non-network token available in the contract
+   * @param price price of one non-network token with respect to network token
+   */
+  interact.displayTokenDetails = (supply, price) =>{
+    console.log(`Amount of tokens remaining: ${supply} \nPrice of Token: ${price}`)
+  }
+
+  /**
+   * @description displays network token balance and non-network token balance
+   * @param tok Token datatype 
+   */
   interact.showBalance = async (tok) => {
-      console.log(`Your balance is ${formatCurrency(await stdlib.balanceOf(accUser))} network tokens and ${await stdlib.balanceOf(accUser, tok)} non-network tokens`);
+      console.log(`Your balance is ${formatCurrency(await stdlib.balanceOf(accUser))} network tokens and ${formatCurrency(await stdlib.balanceOf(accUser, tok))} non-network tokens`);
   }
 
   const part = isOmegaUser ? backend.OmegaUser : backend.NormalUser;

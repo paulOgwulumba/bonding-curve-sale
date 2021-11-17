@@ -1,11 +1,26 @@
-1.  Ask user if he wants to create a token or not
+1.  Ask user if he wants to deploy contract or not
   if(yes) ->  <make user the head principal
-              <create account for user with 100 network tokens
+              <create account for user with 1000 network tokens
+              <launch contract
+              <create new token with supply=100,000
+  if(no)  ->  <create account for user with 1000 network tokens
               <display account content
-              <ask user for details of new token
-              <create token and display token details 
-  if(no)  ->  <ask for contract address for already created token
-              <create account for user with 100 network tokens
-              <display account content
-              <display contract details
+              <ask for contract address for already deployed contract 
+              <connect user to contract
+
+        loop{ //terminate this loop when there aren't anymore n-n-tokens to sell
+
+          loop{
+              <display to user price of non-network token w.r.t network token
+              <ask user for how many n-n-tokens they want to purchase
+              <if number of tokens they want to buy exceeds number of tokens available, restaert loop, else move on to next part of program
+          }
+              <update price of n-n-token using equation
+              <transfer n-n-token to user and n-token to contract
+              <update omega user about this transaction
+              <display normal-user account content (showing n-n-token) to normal user
+        }
+            Transfer n-tokens to omega user
+            
+
   
