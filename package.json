@@ -3,6 +3,7 @@
   "type": "module",
   "version": "0.1.0",
   "dependencies": {
+    "@reach-sh/stdlib": "^0.1.7-rc.0",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
@@ -15,7 +16,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "build": "",
-    "start": "cd src && ../../reach compile && cd ../ && react-scripts start",
+    "start": "cd src && REACH_CONNECTOR_MODE=ALGO-devnet ../../../reach compile && cd ../ && react-scripts start",
     "lint": "eslint --ignore-path .gitignore --ext .mjs .",
     "index": "node --experimental-modules --unhandled-rejections=strict index.mjs"
   },
