@@ -29,7 +29,7 @@ body {
 
 body,
 html {
-    height: 100%;
+    
 }
 
 .btn:focus,
@@ -221,11 +221,19 @@ header h6 {
 }
 
 nav {
+    margin-top: 3rem;
     background-color: #f7da17 !important;
     -webkit-box-shadow: 0 4px 4px -2px rgba(0, 0, 0, 0.1607843137254902);
     -moz-box-shadow: 0 4px 4px -2px rgba(0, 0, 0, 0.1607843137254902);
     box-shadow: 0 4px 4px -2px rgba(0, 0, 0, 0.1607843137254902);
     transition: all 0.5s;
+}
+
+nav .logo-text {
+    color: rgb(51, 39, 39);
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-weight: 900;
+    font-size: 2rem;
 }
 
 header .social-icons ul > li:nth-child(1) {
