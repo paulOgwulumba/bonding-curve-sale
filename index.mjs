@@ -8,7 +8,7 @@ const stdlib = loadStdlib(process.env);
   /**
    * @description Starting balance of user (Strictly for testing purposes).
    */
-  const startingBalance = stdlib.parseCurrency(1000);
+  const startingBalance = stdlib.parseCurrency(100);
 
   /**
    * @description Name of the current user.
@@ -93,15 +93,26 @@ const stdlib = loadStdlib(process.env);
      * @description Asks user if they want to buy a no-network token, then asks for how much of it they want
      * @returns Number of non-network tokens user wants to buy
      */
-    interact.buyToken = async () => {
+    interact.buyToken = async (supply, tokenPrice) => {
       const willBuy = await ask(`Would you like to buy non-network tokens? (Y/n)`, yesno)
-      const numberOfToks = willBuy ? await ask(`How many non-network tokens would you like to buy?`, stdlib.parseCurrency) : 0
-      // return [stdlib.parseCurrency(numberOfToks), accUser.networkAccount]
-      return [fmt(numberOfToks), accUser.networkAccount]
-    }
-
-    interact.notEnoughToken = () => {
-      console.log(`There aren't enough tokens for the amount you want to buy`)
+      var numberOfToks =  null
+      const balance = formatCurrency(await stdlib.balanceOf(accUser))
+      const price = formatCurrency(tokenPrice)
+      while(true){
+        numberOfToks = willBuy ? await ask(`How many non-network tokens would you like to buy?`, x => fmt(stdlib.parseCurrency(x))) : 0
+        if(numberOfToks * price > balance){
+          console.log(`You do not have enough tokens for this transaction. Please don't try to bite more than you can chew`)
+          continue
+        } else{
+          if(numberOfToks > supply){
+            console.log(`You're asking for more tokens than are available. Check the amount of tokens then adjust your demand`)
+            continue
+          } else{
+            return [(numberOfToks), accUser.networkAccount]
+            break
+          }
+        }
+      }
     }
   }
 
@@ -116,7 +127,7 @@ const stdlib = loadStdlib(process.env);
    * @param price price of one non-network token with respect to network token
    */
   interact.displayTokenDetails = (supply, price) =>{
-    console.log(`Amount of tokens remaining: ${supply} \nPrice of Token: ${price}`)
+    console.log(`Amount of tokens remaining: ${supply} \nPrice of Token: ${formatCurrency(price)}`)
   }
 
   /**
@@ -140,5 +151,5 @@ const stdlib = loadStdlib(process.env);
  * @returns Formatted number.
  */
 function formatCurrency(amount) {
-  return stdlib.formatCurrency(amount, 4);
+  return stdlib.formatCurrency(amount, 8);
 }

@@ -19,7 +19,8 @@ const Logger = {
  * @returns Price of non-network token w.r.t network token
  */
 const updatePrice = (totalSupply) => {
-  return 5000/totalSupply;
+  if(totalSupply == 0) return 50000;
+  else return 50000000000/totalSupply;
   // return totalSupply/4
 };
 
@@ -34,8 +35,7 @@ export const main = Reach.App(() => {
   const NormalUser = ParticipantClass('NormalUser', {
     ...User,
     name: Bytes(64),
-    buyToken: Fun([], Tuple(UInt, Address)),
-    notEnoughToken: Fun([], Null)
+    buyToken: Fun([UInt, UInt], Tuple(UInt, Address)),  //supply of non-network tokens
   });
   deploy();
 
@@ -47,7 +47,7 @@ export const main = Reach.App(() => {
   OmegaUser.publish(name);
 
   // Create token
-  const supply = 1000;
+  const supply = 10000;
   const tok = new Token({ name: '01234567890123456789012345678901', symbol: '01234567', supply: supply});
   commit();
 
@@ -68,9 +68,10 @@ export const main = Reach.App(() => {
     NormalUser.only(() => {
       const newPrice = updatePrice(balance(tok));
       const normalUserAccount = this;
-      const normalName = declassify(interact.name)
+      const normalName = declassify(interact.name);
+      declassify(interact.showBalance(tok));
       declassify(interact.displayTokenDetails(balance(tok), newPrice));
-      const [buyTok, me] = declassify(interact.buyToken());
+      const [buyTok, me] = declassify(interact.buyToken(balance(tok), newPrice));
       const tokToPay = buyTok * newPrice;
       assume(buyTok <= balance(tok));
     });
@@ -82,13 +83,12 @@ export const main = Reach.App(() => {
         [ totalBought, totalPaid ] = [ totalBought, totalPaid ];
         continue;
       });
-    OmegaUser.interact.paidBy(normalName, buyTok, tokToPay)
+    OmegaUser.interact.paidBy(normalName, buyTok, newPrice)
     require(this == normalUserAccount);
     
     require(buyTok <= balance(tok));
     transfer(buyTok, tok).to(this);
-    NormalUser.interact.showBalance(tok);
-    OmegaUser.interact.showBalance(tok);
+    OmegaUser.interact.displayTokenDetails(balance(tok), updatePrice(balance(tok)));
     [ totalBought, totalPaid ] = [ totalBought + buyTok, totalPaid + tokToPay ];
     continue;
   }
