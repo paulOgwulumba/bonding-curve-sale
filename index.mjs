@@ -38,7 +38,7 @@ const stdlib = loadStdlib(process.env);
   let contract = null;
   let tokenPrice = null;
 
-  const fmt = (x) => stdlib.formatCurrency(x, 4);
+  const fmt = (x) => stdlib.formatCurrency(x, 8);
 
   // if user is an omega user, create a new contract, else attach to already existing contract using contract info
   if (isOmegaUser) {
@@ -71,7 +71,7 @@ const stdlib = loadStdlib(process.env);
      * @param price Price of non-network token
      */
     interact.paidBy = (name, amount, price) => {
-      console.log(`${name} paid for ${fmt(amount)} non-network tokens with ${fmt(amount*price)} network tokens`)
+      console.log(`${name} paid for ${amount} non-network tokens with ${fmt(amount*price)} network tokens`)
     }
 
     /**
@@ -95,16 +95,19 @@ const stdlib = loadStdlib(process.env);
      */
     interact.buyToken = async () => {
       const willBuy = await ask(`Would you like to buy non-network tokens? (Y/n)`, yesno)
-      if(!willBuy){
-        process.exit(0)
-      }
-      const numberOfToks = await ask(`How many non-network tokens would you like to buy?`, stdlib.parseCurrency)
-      return numberOfToks
+      const numberOfToks = willBuy ? await ask(`How many non-network tokens would you like to buy?`, stdlib.parseCurrency) : 0
+      // return [stdlib.parseCurrency(numberOfToks), accUser.networkAccount]
+      return [fmt(numberOfToks), accUser.networkAccount]
     }
 
     interact.notEnoughToken = () => {
       console.log(`There aren't enough tokens for the amount you want to buy`)
     }
+  }
+
+  interact.acceptToken = async (token) => {
+    const tokenID = stdlib.bigNumberToNumber(token)
+    await accUser.tokenAccept(tokenID)
   }
 
   /**
@@ -121,7 +124,8 @@ const stdlib = loadStdlib(process.env);
    * @param tok Token datatype 
    */
   interact.showBalance = async (tok) => {
-      console.log(`Your balance is ${formatCurrency(await stdlib.balanceOf(accUser))} network tokens and ${formatCurrency(await stdlib.balanceOf(accUser, tok))} non-network tokens`);
+      // console.log(`Your balance is ${formatCurrency(await stdlib.balanceOf(accUser))} network tokens and ${formatCurrency(await stdlib.balanceOf(accUser, tok))} non-network tokens`);
+      console.log(`Your balance is ${formatCurrency(await stdlib.balanceOf(accUser))} network tokens and ${(await stdlib.balanceOf(accUser, tok))} non-network tokens`);
   }
 
   const part = isOmegaUser ? backend.OmegaUser : backend.NormalUser;

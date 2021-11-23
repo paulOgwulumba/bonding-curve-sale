@@ -3,6 +3,7 @@
 const User = {
   showBalance: Fun([Token], Null),
   displayTokenDetails: Fun([UInt, UInt], Null), //(supply, price)
+  acceptToken: Fun([Token], Null),
   ...hasRandom,
 };
 const gotHere = "got here";
@@ -18,7 +19,8 @@ const Logger = {
  * @returns Price of non-network token w.r.t network token
  */
 const updatePrice = (totalSupply) => {
-  return 50000/totalSupply;
+  return 5000/totalSupply;
+  // return totalSupply/4
 };
 
 export const main = Reach.App(() => {
@@ -32,7 +34,7 @@ export const main = Reach.App(() => {
   const NormalUser = ParticipantClass('NormalUser', {
     ...User,
     name: Bytes(64),
-    buyToken: Fun([], UInt),
+    buyToken: Fun([], Tuple(UInt, Address)),
     notEnoughToken: Fun([], Null)
   });
   deploy();
@@ -45,15 +47,16 @@ export const main = Reach.App(() => {
   OmegaUser.publish(name);
 
   // Create token
-  const supply = 10000;
+  const supply = 1000;
   const tok = new Token({ name: '01234567890123456789012345678901', symbol: '01234567', supply: supply});
-  const tokenPrice = updatePrice(balance(tok));
   commit();
 
   //Display minted token's supply and price to Omega user
   OmegaUser.only(() => {
-    declassify(interact.displayTokenDetails(balance(tok), tokenPrice));
+    interact.acceptToken(tok);
+    declassify(interact.displayTokenDetails(balance(tok), updatePrice(balance(tok))));
   });
+  NormalUser.interact.acceptToken(tok);
   OmegaUser.publish();
 
   var [ totalBought, totalPaid ]  = [ 0, 0 ]; //total amount of non-network tokens paid for, total amount of network tokens spent
@@ -63,42 +66,31 @@ export const main = Reach.App(() => {
 
     //Normal User gets and publishes their name and account address and gets shown token details 
     NormalUser.only(() => {
-      const normalName = declassify(interact.name);
       const newPrice = updatePrice(balance(tok));
       const normalUserAccount = this;
-      declassify(interact.displayTokenDetails(balance(tok), updatePrice(balance(tok))));
-      const buyTok = declassify(interact.buyToken());
+      const normalName = declassify(interact.name)
+      declassify(interact.displayTokenDetails(balance(tok), newPrice));
+      const [buyTok, me] = declassify(interact.buyToken());
+      const tokToPay = buyTok * newPrice;
+      assume(buyTok <= balance(tok));
     });
-    NormalUser.publish(normalName, normalUserAccount, buyTok, newPrice);
-    OmegaUser.interact.logInt(buyTok)
-    const tokToPay = buyTok * newPrice;
-
-    if(buyTok < balance(tok)){
-      commit();
-      OmegaUser.interact.logString(gotHere)
-      NormalUser.pay(tokToPay);
-      OmegaUser.interact.logString(gotHere)
-      transfer(buyTok, tok).to(normalUserAccount);
-      commit()
-
-      OmegaUser.only(() => {
-        declassify(interact.displayTokenDetails(balance(tok), updatePrice(balance(tok))));
+    NormalUser.publish(buyTok, newPrice, normalUserAccount, me, normalName, tokToPay)
+      .pay(tokToPay)
+      .when(me == normalUserAccount)
+      .timeout(relativeTime(5), () => {
+        NormalUser.publish();
+        [ totalBought, totalPaid ] = [ totalBought, totalPaid ];
+        continue;
       });
-      OmegaUser.publish();
-
-      [ totalBought, totalPaid ] = [ totalBought + buyTok, totalPaid + tokToPay ];
-      continue;
-    } else{
-      commit();
-      NormalUser.only(() => {
-        interact.notEnoughToken();
-      });
-      NormalUser.publish();
-
-      [ totalBought, totalPaid ] = [ totalBought, totalPaid ];
-      continue;
-    }
+    OmegaUser.interact.paidBy(normalName, buyTok, tokToPay)
+    require(this == normalUserAccount);
     
+    require(buyTok <= balance(tok));
+    transfer(buyTok, tok).to(this);
+    NormalUser.interact.showBalance(tok);
+    OmegaUser.interact.showBalance(tok);
+    [ totalBought, totalPaid ] = [ totalBought + buyTok, totalPaid + tokToPay ];
+    continue;
   }
   
   transfer(totalPaid).to(OmegaUser)
