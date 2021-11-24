@@ -1,2 +1,40 @@
 Box-shadow template
 box-shadow: 4px 4px 20px rgba(0,0,0,0.3);
+
+Theme yellow
+#f7da17
+
+font-family: 'Montserrat', sans-serif;
+
+/*=======================================
+          Media Queries Styles
+=======================================*/
+
+/*== 1920px Media Queries Styles ==*/
+
+@media screen and (max-width: 1920px) {}
+
+/*== 1440px Media Queries Styles ==*/
+
+@media screen and (max-width: 1440px) {}
+
+/*== 1024px Media Queries Styles ==*/
+
+@media screen and (max-width: 1024px) {}
+
+/*== 768px Media Queries Styles ==*/
+
+@media screen and (max-width: 768px) {}
+
+/*== 425px Media Queries Styles ==*/
+
+@media screen and (max-width: 425px) {}
+
+/*== 375px Media Queries Styles ==*/
+
+@media screen and (max-width: 375px) {}
+
+/*== 320px Media Queries Styles ==*/
+
+@media screen and (max-width: 320px) {}
+
