@@ -1,15 +1,17 @@
 import styles from './css/OmegaUser.module.css'
-
+import { useState } from 'react'
+// name
+// password
 const OmegaUser = (props) => {
     return (
         <div className={styles.container}>
-            <section class="subscribe">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="heading">
+            <section className="subscribe">
+                <div className="container">
+                    <div className="row">
+                        <div className="col-md-12">
+                            <div className="row">
+                                <div className="col-md-12">
+                                    <div className="heading pointer">
                                         <h2>Welcome, Omega User.</h2>
                                         <br />
                                         <p>
@@ -17,18 +19,34 @@ const OmegaUser = (props) => {
                                         </p>
                                     </div>
                                 </div>
-                                <div class="col-md-12">
-                                    <form class="row form" style={{display: "flex", justifyContent: "center"}}>
-                                        <div class="col-lg-7 col-md-8 col-sm-12 form-group">
-                                            <input type="text" class="form-control" placeholder="Enter verified username" required/>
+                                <div className="col-md-12">
+                                    <form className="row form" style={{display: "flex", justifyContent: "center"}} onSubmit={props.handleSubmit}>
+                                        <div className="col-lg-7 col-md-8 col-sm-12 form-group">
+                                            <input 
+                                                type="text" 
+                                                className="form-control" 
+                                                placeholder="Enter verified username" 
+                                                required 
+                                                onChange={props.handleChange} 
+                                                name="username" 
+                                                value={props.username}
+                                            />
                                         </div>
-                                        <div class="col-lg-7 col-md-8 col-sm-12 form-group">
-                                            <input type="password" class="form-control" placeholder="Enter correct passcode" required/>
+                                        <div className="col-lg-7 col-md-8 col-sm-12 form-group">
+                                            <input 
+                                                type="password" 
+                                                className="form-control" 
+                                                placeholder="Enter correct passcode" 
+                                                required 
+                                                onChange={props.handleChange}
+                                                name="password"
+                                                value={props.password}
+                                            />
                                         </div>
-                                        <div class="col-12">
-                                            <button type="submit" class="btn btn-primary">Create Contract</button>
+                                        <div className="col-12">
+                                            <button className="btn btn-primary">Create Contract</button>
                                         </div>
-                                        <div class="col-md-1 sub-hidden"></div>
+                                        <div className="col-md-1 sub-hidden"></div>
                                     </form>
                                 </div>
                             </div>
@@ -41,3 +59,6 @@ const OmegaUser = (props) => {
 }
 
 export default OmegaUser
+
+// list of props
+// props.password props.username props.handleChange props.handleSubmit()

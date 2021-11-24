@@ -40,8 +40,6 @@
     background-color: #fff;
     animation: move 500ms linear 0ms infinite;
     margin-right: 30px;
-
-
 }
 
 .container .circle:first-child {
