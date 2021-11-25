@@ -1,8 +1,8 @@
-import styles from './css/OmegaUser.module.css'
-import { useState } from 'react'
+import styles from './OmegaUserLogIn.module.css'
+
 // name
 // password
-const OmegaUser = (props) => {
+const OmegaUserLogIn = (props) => {
     return (
         <div className={styles.container}>
             <section className="subscribe">
@@ -28,7 +28,7 @@ const OmegaUser = (props) => {
                                                 placeholder="Enter verified username" 
                                                 required 
                                                 onChange={props.handleChange} 
-                                                name="username" 
+                                                name="omegaUsername" 
                                                 value={props.username}
                                             />
                                         </div>
@@ -39,7 +39,7 @@ const OmegaUser = (props) => {
                                                 placeholder="Enter correct passcode" 
                                                 required 
                                                 onChange={props.handleChange}
-                                                name="password"
+                                                name="omegaPassword"
                                                 value={props.password}
                                             />
                                         </div>
@@ -58,7 +58,7 @@ const OmegaUser = (props) => {
     )
 }
 
-export default OmegaUser
+export default OmegaUserLogIn
 
 // list of props
 // props.password props.username props.handleChange props.handleSubmit()

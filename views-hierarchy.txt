@@ -1,0 +1,20 @@
+Views
+
+-Index View
+--Loading Page
+
+-Omega Log in View
+--Omega Log in
+
+-Connect Account View
+--Loading Page
+--Connect Account
+
+-Omega Create Contract View
+--Loading Page
+--Create Contract
+--Contract creation Successful
+
+-Normal User buy token View
+--Loading Page
+--Normal user

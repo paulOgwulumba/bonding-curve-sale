@@ -1,70 +1,37 @@
 // import logo from './logo.svg';
 import React from 'react'
-import Navbar from './components/Navbar'
-import Loader from './components/Loader'
-import OmegaUser from './components/OmegaUser'
+import Navbar from './components/Navbar/Navbar'
+import RenderView from './views';
+import { Views } from './utils/constants'
+import * as functions from './utils/functions'
 import './App.css';
 
 
 class App extends React.Component {
   state = {
-    isLoading: true.valueOf,
-    omegaUser: {
-      username: '',
-      password: '',
-      handleSubmit: this.handleSubmit,
-      handleChange: this.handleChange
-    }
+    view: Views.INDEX_VIEW,
+    omegaPassword: '',
+    omegaUsername: '',
+    canLogOut: false, 
   }
 
   componentDidMount() {
+    // Bind imported functions to App
+    this.handleOmegaInputChange = functions.handleOmegaInputChange.bind(this)
+    this.handleOmegaInputChange = functions.handleOmegaInputChange.bind(this)
+    this.fetchContractInformation = functions.fetchContractInformation.bind(this)
+
     // Get contract information from API service
-    this.handleSubmit = this.handleSubmit.bind(this)
-    this.handleChange = this.handleChange.bind(this)
-    this.fetchContractInformation = this.fetchContractInformation.bind(this)
     this.fetchContractInformation()
-    
   }
 
   render() {
     return (
       <div class="App">
         <Navbar />
-        <Loader isLoading={this.state.isLoading}/>
-        <OmegaUser 
-          handleSubmit={this.state.omegaUser.handleSubmit} 
-          handleChange={this.state.omegaUser.handleChange}
-          username={this.state.omegaUser.username} 
-          password={this.state.omegaUser.password}
-        />
+        {RenderView(this, this.state.view)}
       </div>
     );
-  }
-
-  /**
-   * @desc Gets the existing contract information from database. If none, allow an Omega User create one.
-   */
-  fetchContractInformation() {
-    fetch('http://localhost:5000/contract-information')
-      .then(response => response.json())
-      .then(data => {
-        this.setState({isLoading: false})
-      })
-      .catch(e => {
-        // If no response is gotten from API service, try connecting again.
-        this.fetchContractInformation()
-      })
-  }
-
-  handleSubmit(event) {
-    event.preventDefault();
-    console.log('wareva')
-  }
-
-  handleChange(event) {
-    this.setState({omegaUser: {
-      
-    }});
   }
 }
 

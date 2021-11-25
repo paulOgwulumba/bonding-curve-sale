@@ -1,4 +1,4 @@
-import styles from './css/Loader.module.css'
+import styles from './Loader.module.css'
 const Loader = (props) => {
     const style = props.isLoading? styles.holder : styles.hide;
     return (
