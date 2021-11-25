@@ -7,6 +7,7 @@ const OmegaLogInView = ({parent}) =>{
             username={parent.state.omegaUsername}
             handleSubmit={parent.handleOmegaLogInSubmit}
             handleChange={parent.handleOmegaInputChange}
+            areDetailsCorrect={parent.state.omegaDetailsAreCorrect}
         />
     )
 }

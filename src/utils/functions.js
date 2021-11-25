@@ -38,7 +38,14 @@ function handleOmegaLogInSubmit(event) {
   fetch(`${API_BASE_URL}/admin/log-in`, options)
     .then(response => response.json())
     .then(data => {
-      console.log(data)
+      if(data.status === 'success'){
+        this.setState({view: Views.CONNECT_ACCOUNT, canLogOut: true, omegaDetailsAreCorrect: true, omegaUsername: '', omegaPassword: ''})
+      } else {
+        this.setState({omegaDetailsAreCorrect: false})
+      }
+    })
+    .catch(e => {
+      this.setState({view: Views.INDEX_VIEW})
     })
 }
 
@@ -47,7 +54,7 @@ function handleOmegaLogInSubmit(event) {
  * @param {*} event 
  */
 function handleOmegaInputChange(event) {
-    this.setState({[event.target.name]: event.target.value})
+    this.setState({[event.target.name]: event.target.value, omegaDetailsAreCorrect: true})
 }
 
 /**
@@ -58,9 +65,25 @@ function handleLogOut() {
     .then(response => response.json())
     .then(data => {
       this.setState({view: Views.INDEX_VIEW})
+      this.fetchContractInformation()
     }).catch(e => {
       this.handleLogOut()
     })
 }
 
-export {fetchContractInformation, handleOmegaInputChange, handleOmegaLogInSubmit}
+/**
+ * @desc Connect to crypto account
+ */
+async function connectDefaultAccount(serviceProvider) {
+  await this.state.reach.setProviderByName(serviceProvider)
+  try {
+    let acct = await this.state.reach.getDefaultAccount();
+    this.setState({account: acct})
+    return true
+  } catch(err) {
+    return false
+  }
+  
+}
+
+export {fetchContractInformation, handleOmegaInputChange, handleOmegaLogInSubmit, handleLogOut, connectDefaultAccount}

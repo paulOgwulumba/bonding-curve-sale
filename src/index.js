@@ -11,7 +11,7 @@ const reach = loadStdlib(process.env);
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <App reach={reach}/>
   </React.StrictMode>,
   document.getElementById('root')
 );

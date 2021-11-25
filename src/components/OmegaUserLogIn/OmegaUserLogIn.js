@@ -3,6 +3,7 @@ import styles from './OmegaUserLogIn.module.css'
 // name
 // password
 const OmegaUserLogIn = (props) => {
+  const extraClass = props.areDetailsCorrect? styles.hide : ''
     return (
         <div className={styles.container}>
             <section className="subscribe">
@@ -17,6 +18,7 @@ const OmegaUserLogIn = (props) => {
                                         <p>
                                             To proceed with creating a new contract, enter the correct details.
                                         </p>
+                                        <small className={`text-danger ${extraClass}`}>Invalid details. Please enter correct details.*</small>
                                     </div>
                                 </div>
                                 <div className="col-md-12">

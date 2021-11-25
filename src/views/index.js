@@ -1,5 +1,7 @@
 import IndexView from './IndexView'
 import OmegaLogInView from './OmegaLogInView'
+import ConnectAccountView from './ConnectAccountView'
+import CreateContractView from './CreateContractView'
 import { Views } from '../utils/constants'
 
 const RenderView = (parent, view="") => {
@@ -17,6 +19,10 @@ const RenderView = (parent, view="") => {
                 <OmegaLogInView parent={parent}/>
             )
             break;
+        }
+
+        case Views.CONNECT_ACCOUNT: {
+          return <ConnectAccountView parent={parent} connectAccount={parent.connectDefaultAccount}/>
         }
 
         default : {

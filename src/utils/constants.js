@@ -16,4 +16,10 @@ const Views = {
 
 const API_BASE_URL = 'http://localhost:5000'
 
-export { AppStatus, Views, API_BASE_URL }
+const Provider = {
+  MAIN_NET: 'MainNet',
+  TEST_NET: 'TestNet',
+  LOCAL_HOST: 'LocalHost'
+}
+
+export { AppStatus, Views, API_BASE_URL, Provider }
