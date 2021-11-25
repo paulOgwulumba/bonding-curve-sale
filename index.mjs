@@ -70,8 +70,8 @@ const stdlib = loadStdlib(process.env);
      * @param amount Amount of tokens paid to contract 
      * @param price Price of non-network token
      */
-    interact.paidBy = (name, amount, price) => {
-      console.log(`${name} paid for ${amount} non-network tokens with ${fmt(amount*price)} network tokens`)
+    interact.paidBy = (name, amount, price, address) => {
+      console.log(`${name} of address: ${address} paid for ${amount} non-network tokens with ${fmt(amount*price)} network tokens. `)
     }
 
     /**
@@ -136,7 +136,7 @@ const stdlib = loadStdlib(process.env);
    */
   interact.showBalance = async (tok) => {
       // console.log(`Your balance is ${formatCurrency(await stdlib.balanceOf(accUser))} network tokens and ${formatCurrency(await stdlib.balanceOf(accUser, tok))} non-network tokens`);
-      console.log(`Your balance is ${formatCurrency(await stdlib.balanceOf(accUser))} network tokens and ${(await stdlib.balanceOf(accUser, tok))} non-network tokens`);
+      console.log(`Your balance is ${formatCurrency(await stdlib.balanceOf(accUser))} network tokens and ${formatCurrency(stdlib.parseCurrency(await stdlib.balanceOf(accUser, tok)))} non-network tokens`);
   }
 
   const part = isOmegaUser ? backend.OmegaUser : backend.NormalUser;

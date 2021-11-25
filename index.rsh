@@ -28,7 +28,7 @@ export const main = Reach.App(() => {
   const OmegaUser = Participant('OmegaUser', {
     ...User,
     name: Bytes(64),
-    paidBy: Fun([Bytes(64), UInt, UInt], Null), //<(name, amount-of-n-token, price-of-n-n-token)
+    paidBy: Fun([Bytes(64), UInt, UInt, Address], Null), //<(name, amount-of-n-token, price-of-n-n-token)
     ...Logger
   });
 
@@ -83,7 +83,7 @@ export const main = Reach.App(() => {
         [ totalBought, totalPaid ] = [ totalBought, totalPaid ];
         continue;
       });
-    OmegaUser.interact.paidBy(normalName, buyTok, newPrice)
+    OmegaUser.interact.paidBy(normalName, buyTok, newPrice, normalUserAccount)
     require(this == normalUserAccount);
     
     require(buyTok <= balance(tok));
