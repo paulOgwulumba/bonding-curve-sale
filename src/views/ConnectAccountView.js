@@ -10,7 +10,7 @@ class ConnectAccountView extends Component {
     if(this.props.parent.state.hasDefaultAccount === false){
       return(
         <>
-          <CreateOrImportAccount />
+          <CreateOrImportAccount parent={this.props.parent}/>
         </>
       )
     }

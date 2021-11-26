@@ -64,7 +64,7 @@ function handleLogOut() {
   fetch(`${API_BASE_URL}/admin/log-out`)
     .then(response => response.json())
     .then(data => {
-      this.setState({view: Views.INDEX_VIEW})
+      this.setState({view: Views.INDEX_VIEW, canLogOut: false})
       this.fetchContractInformation()
     }).catch(e => {
       this.handleLogOut()
@@ -87,4 +87,21 @@ async function connectDefaultAccount() {
   
 }
 
-export {fetchContractInformation, handleOmegaInputChange, handleOmegaLogInSubmit, handleLogOut, connectDefaultAccount}
+/**
+ * This adds a new account to the application.
+ * @param {*} account contract object to be added to application
+ */
+function addAccount(account) {
+  this.setState({account: account, view: Views.CREATE_CONTRACT})
+  console.log('here')
+  console.log(account)
+}
+
+export {
+          fetchContractInformation, 
+          handleOmegaInputChange, 
+          handleOmegaLogInSubmit, 
+          handleLogOut, 
+          connectDefaultAccount,
+          addAccount
+}

@@ -25,6 +25,7 @@ class App extends React.Component {
     this.handleOmegaInputChange = functions.handleOmegaInputChange.bind(this)
     this.handleOmegaLogInSubmit = functions.handleOmegaLogInSubmit.bind(this)
     this.fetchContractInformation = functions.fetchContractInformation.bind(this)
+    this.addAccount = functions.addAccount.bind(this)
     this.handleLogOut = functions.handleLogOut.bind(this)
     this.connectDefaultAccount = functions.connectDefaultAccount.bind(this)
 
