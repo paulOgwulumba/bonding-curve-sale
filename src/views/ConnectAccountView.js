@@ -1,17 +1,26 @@
 import { Component } from 'react';
 import Loader from '../components/Loader/Loader'
-import { Provider } from '../utils/constants';
+import CreateOrImportAccount from '../components/CreateOrImportAccount/CreateOrImportAccount';
 
 class ConnectAccountView extends Component {
   async componentDidMount() {
-    console.log(await this.props.connectAccount(Provider.TEST_NET))
+    await this.props.connectAccount()
   }
   render() {
-    return(
-      <>
-        <Loader isLoading={true}/>
-      </>
-    )
+    if(this.props.parent.state.hasDefaultAccount === false){
+      return(
+        <>
+          <CreateOrImportAccount />
+        </>
+      )
+    }
+    else {
+      return(
+        <>
+          <Loader isLoading={true}/>
+        </>
+      )
+    }
   }
 }
 

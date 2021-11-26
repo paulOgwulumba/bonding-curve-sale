@@ -1,7 +1,5 @@
 import styles from './OmegaUserLogIn.module.css'
 
-// name
-// password
 const OmegaUserLogIn = (props) => {
   const extraClass = props.areDetailsCorrect? styles.hide : ''
     return (
@@ -61,6 +59,3 @@ const OmegaUserLogIn = (props) => {
 }
 
 export default OmegaUserLogIn
-
-// list of props
-// props.password props.username props.handleChange props.handleSubmit()

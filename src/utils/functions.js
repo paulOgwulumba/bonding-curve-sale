@@ -74,13 +74,14 @@ function handleLogOut() {
 /**
  * @desc Connect to crypto account
  */
-async function connectDefaultAccount(serviceProvider) {
-  await this.state.reach.setProviderByName(serviceProvider)
+async function connectDefaultAccount() {
   try {
     let acct = await this.state.reach.getDefaultAccount();
-    this.setState({account: acct})
+    this.setState({account: acct, hasDefaultAccount: true});
     return true
-  } catch(err) {
+  } 
+  catch(error) {
+    this.setState({hasDefaultAccount: false})
     return false
   }
   

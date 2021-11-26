@@ -17,7 +17,8 @@
   "license": "Apache-2.0",
   "scripts": {
     "build": "",
-    "start": "cd src && REACH_CONNECTOR_MODE=ALGO-devnet ../../../reach compile && cd ../ && react-scripts start",
+    "start_with_reach": "cd src && REACH_CONNECTOR_MODE=ALGO-devnet ../../../reach compile && cd ../ && react-scripts start",
+    "start": "react-scripts start",
     "lint": "eslint --ignore-path .gitignore --ext .mjs .",
     "index": "node --experimental-modules --unhandled-rejections=strict index.mjs"
   },

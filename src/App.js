@@ -10,6 +10,9 @@ import './App.css';
 class App extends React.Component {
   state = {
     reach: this.props.reach,
+    account: {},
+    hasDefaultAccount: 'unknown',
+
     view: Views.INDEX_VIEW,
     omegaPassword: '',
     omegaUsername: '',

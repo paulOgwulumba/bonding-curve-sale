@@ -1,12 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import { Provider } from './utils/constants';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import * as backend from './build/index.main.mjs';
 import { loadStdlib } from '@reach-sh/stdlib';
 import "tachyons"
-const reach = loadStdlib(process.env);
+const reach = loadStdlib('ALGO');
+reach.setProviderByName(Provider.TEST_NET)
 
 
 ReactDOM.render(
