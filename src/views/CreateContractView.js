@@ -1,14 +1,10 @@
-import { Component } from 'react';
-import Loader from '../components/Loader/Loader'
+import CreateContract from '../components/CreateContract/CreateContract'
 
-class CreateContractView extends Component {
-  render() {
-    return(
-      <>
-        <Loader isLoading={true}/>
-      </>
-    )
-  }
+const CreateContractView = ({ parent }) => {
+  return (
+    <CreateContract parent={parent} />
+  )
+
 }
 
 export default CreateContractView

@@ -4,30 +4,36 @@ import ConnectAccountView from './ConnectAccountView'
 import CreateContractView from './CreateContractView'
 import { Views } from '../utils/constants'
 
-const RenderView = (parent, view="") => {
-    switch(view) {
+const RenderView = (parent, view = "") => {
+    switch (view) {
         // Index View
         case Views.INDEX_VIEW: {
             return (
-                <IndexView state={parent.state}/>
+                <IndexView state={parent.state} />
             )
             break;
         }
 
         case Views.OMEGA_LOG_IN: {
             return (
-                <OmegaLogInView parent={parent}/>
+                <OmegaLogInView parent={parent} />
             )
             break;
         }
 
         case Views.CONNECT_ACCOUNT: {
-          return <ConnectAccountView parent={parent} connectAccount={parent.connectDefaultAccount}/>
+            return <ConnectAccountView parent={parent} connectAccount={parent.connectDefaultAccount} />
+            break;
         }
 
-        default : {
+        case Views.CREATE_CONTRACT: {
+            return <CreateContractView parent={parent} />
+            break;
+        }
+
+        default: {
             return (
-                <IndexView state={parent.state}/>
+                <IndexView state={parent.state} />
             )
         }
     }
