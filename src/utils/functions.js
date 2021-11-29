@@ -112,9 +112,34 @@ async function createContract() {
   const contract = this.state.account.deploy(this.state.backend);
   console.log('Contract created successfully')
   console.log(contract)
-  this.setState({ contract: contract })
+  console.log('Communicating with back end...')
 
-  await this.state.backend.OmegaUser(contract, interact);
+  const options = {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json"
+    },
+    body: JSON.stringify({ contract }),
+  }
+
+  this.setState({ contract: contract, isLoading: true })
+
+  fetch(`${API_BASE_URL}/contract-information`, options)
+  .then(response => response.json())
+  .then(data => {
+    console.log(data)
+  })
+  
+  try {
+    await this.state.backend.OmegaUser(contract, interact)
+    // const contractAddress = await contract.getInfo()
+    // console.log(contractAddress)
+    // this.setState({contractAddress: contractAddress})
+  }
+  catch(e) {
+    console.error(e)
+    alert("Insufficied tokens in wallet to create contract")
+  }
 }
 
 function createParticipantInteractInterface(name = "") {
@@ -141,9 +166,10 @@ function createParticipantInteractInterface(name = "") {
    * @param price price of one non-network token with respect to network token
    */
   interact.displayTokenDetails = (supply, price) => {
-    console.log(`supply: ${supply}`)
+    console.log(supply)
     console.log(`price: ${price}`)
     console.log(`Amount of tokens remaining: ${supply} \nPrice of Token: ${this.formatCurrency(price)}`)
+    this.setState({supply: supply, price: this.formatCurrency(price)})
   }
 
   return interact

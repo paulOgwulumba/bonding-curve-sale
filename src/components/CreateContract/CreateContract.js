@@ -10,9 +10,14 @@ const CreateContract = ({ parent }) => {
   }
 
   useEffect(async () => {
-    let bal = await getTokenBalance()
-    setBalance(bal)
-  })
+
+    const doing = async () => {
+      let bal = await getTokenBalance()
+      setBalance(bal)
+    }
+
+    doing()
+  }, [getTokenBalance])
 
   return (
     <div className={styles.container}>

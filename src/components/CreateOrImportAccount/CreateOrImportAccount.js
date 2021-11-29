@@ -27,39 +27,40 @@ const CreateOrImportAccount = (props) => {
       console.log(props.parent.state.reach.formatCurrency(balanceOfAcc, 6))
 
       // check if account can be funded from faucet
-      // console.log("Checking if account can be funded from faucet.")
-      // const canFundFromFaucet = await props.parent.state.reach.canFundFromFaucet()
+      console.log("Checking if account can be funded from faucet.")
+      const canFundFromFaucet = await props.parent.state.reach.canFundFromFaucet()
 
-      // if (canFundFromFaucet) {
-      //   console.log("Account can be funded from faucet.")
+      if (canFundFromFaucet) {
+        console.log("Account can be funded from faucet.")
 
-      //   // get faucet information
-      //   console.log("Getting faucet information")
-      //   const faucet = await props.parent.state.reach.getFaucet()
-      //   console.log("Faucet information gotten successfuly")
+        // get faucet information
+        console.log("Getting faucet information")
+        const faucet = await props.parent.state.reach.getFaucet()
+        console.log("Faucet information gotten successfuly")
 
-      //   console.log("getting the balance of our faucet before funding")
-      //   let balanceOfFaucet = await props.parent.state.reach.balanceOf(faucet)
-      //   console.log(props.parent.state.reach.formatCurrency(balanceOfFaucet, 6))
+        console.log("getting the balance of our faucet before funding")
+        let balanceOfFaucet = await props.parent.state.reach.balanceOf(faucet)
+        let ballerina = props.parent.state.reach.formatCurrency(balanceOfFaucet, 6)
+        console.log(props.parent.state.reach.formatCurrency(balanceOfFaucet, 6))
 
-      //   // funding our account
-      //   console.log("Funding our imported account.")
-      //   await props.parent.state.reach.fundFromFaucet(acc, props.parent.state.reach.parseCurrency(3))
-      //   console.log("Done funding our imported account")
+        // funding our account
+        console.log("Funding our imported account. with " + (ballerina - 0.5))
+        await props.parent.state.reach.fundFromFaucet(acc, props.parent.state.reach.parseCurrency(ballerina - 0.5))
+        console.log("Done funding our imported account")
 
-      //   // check balance of account before funding
-      //   console.log("Checking the balance of our imported account after funding")
-      //   balanceOfAcc = await props.parent.state.reach.balanceOf(acc)
-      //   console.log(props.parent.state.reach.formatCurrency(balanceOfAcc, 6))
+        // check balance of account before funding
+        console.log("Checking the balance of our imported account after funding")
+        balanceOfAcc = await props.parent.state.reach.balanceOf(acc)
+        console.log(props.parent.state.reach.formatCurrency(balanceOfAcc, 6))
 
-      //   // check balance of faucet after funding
-      //   console.log("getting the balance of our faucet after funding")
-      //   balanceOfFaucet = await props.parent.state.reach.balanceOf(faucet)
-      //   console.log(props.parent.state.reach.formatCurrency(balanceOfFaucet, 6))
+        // check balance of faucet after funding
+        console.log("getting the balance of our faucet after funding")
+        balanceOfFaucet = await props.parent.state.reach.balanceOf(faucet)
+        console.log(props.parent.state.reach.formatCurrency(balanceOfFaucet, 6))
 
-      // } else {
-      //   console.log("Cannot fund from faucet")
-      // }
+      } else {
+        console.log("Cannot fund from faucet")
+      }
 
       setMnemonicIsValid(true)
       setIsImportSuccessful(true)

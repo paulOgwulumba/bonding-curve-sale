@@ -1,17 +1,13 @@
 import React from 'react'
-import styles from './CreateContract.module.css'
+import styles from './ContractCreated.module.css'
 import { useEffect, useState } from 'react'
 
 const ContractCreated = ({ parent }) => {
-  const [balance, setBalance] = useState(0)
-  const getTokenBalance = async () => {
-    let balance = await parent.state.reach.balanceOf(parent.state.account);
-    return parent.state.reach.formatCurrency(balance, 6)
-  }
-
+  const [address, setAddress] = useState("0x")
+  
   useEffect(async () => {
-    let bal = await getTokenBalance()
-    setBalance(bal)
+    console.log(parent.state.contractAdddress)
+      setAddress(parent.state.contractAddress)
   })
 
   return (
@@ -23,18 +19,22 @@ const ContractCreated = ({ parent }) => {
               <div className="row">
                 <div className="col-12">
                   <div className="heading pointer" style={{ padding: '2rem' }}>
-                    <h2>CREATE NEW CONTRACT</h2>
+                    <h2>CONTRACT INFORMATION</h2>
                     <br />
-                    <p><b>Your Public Address:</b> <br /> {parent.state.account.getAddress ? parent.state.account.getAddress() : ''}</p>
+                    <p><b>Contract Address:</b> <br /> {address}</p>
                     <p>
-                      <b>Your Token Balance:</b> <br />
-                      {balance}
+                      <b>Token Supply:</b> <br />
+                      {parseInt(parent.state.supply._hex, 16) || 0}
+                    </p>
+                    <p>
+                      <b>Token Current Price:</b> <br />
+                      {(parent.state.price)}
                     </p>
                   </div>
                 </div>
                 <div className="col-12">
-                  <button className={`btn btn-primary ${styles.spacing}`} onClick={() => parent.createContract()}>
-                    Create Contract
+                  <button className={`btn btn-primary ${styles.spacing}`}>
+                    
                   </button>
                 </div>
               </div>

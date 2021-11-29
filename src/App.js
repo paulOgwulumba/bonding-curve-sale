@@ -13,6 +13,10 @@ class App extends React.Component {
     backend: this.props.backend,
     account: {},
     hasDefaultAccount: 'unknown',
+    supply: 0,
+    price: 0,
+    isLoading: false,
+    contractAddress: '0x',
 
     view: Views.INDEX_VIEW,
     omegaPassword: '',
