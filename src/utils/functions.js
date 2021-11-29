@@ -119,13 +119,20 @@ async function createContract() {
   contract.getInfo().then(info => {
     this.setState({contractAddress: JSON.stringify(info), contract: contract, })
 
+    let obj = {
+      contract: JSON.stringify(contract),
+      address: JSON.stringify(info)
+    }
+
     const options = {
       method: "POST",
       headers: {
         "Content-type": "application/json"
       },
-      body: {contract, address: JSON.stringify(info)},
+      body: obj
     }
+
+    console.log(options)
 
     fetch(`${API_BASE_URL}/contract-information`, options)
     .then(response => response.json())
@@ -178,7 +185,7 @@ function createParticipantInteractInterface(name = "") {
     console.log(supply)
     console.log(`price: ${price}`)
     console.log(`Amount of tokens remaining: ${supply} \nPrice of Token: ${this.formatCurrency(price)}`)
-    this.setState({supply: supply, price: this.formatCurrency(price)})
+    this.setState({supply: supply, price: (this.formatCurrency(price) * 1000000)})
   }
 
   return interact
