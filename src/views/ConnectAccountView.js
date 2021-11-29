@@ -1,3 +1,4 @@
+import React from 'react'
 import { Component } from 'react';
 import Loader from '../components/Loader/Loader'
 import CreateOrImportAccount from '../components/CreateOrImportAccount/CreateOrImportAccount';
@@ -7,17 +8,17 @@ class ConnectAccountView extends Component {
     await this.props.connectAccount()
   }
   render() {
-    if(this.props.parent.state.hasDefaultAccount === false){
-      return(
+    if (this.props.parent.state.hasDefaultAccount === false) {
+      return (
         <>
-          <CreateOrImportAccount parent={this.props.parent}/>
+          <CreateOrImportAccount parent={this.props.parent} />
         </>
       )
     }
     else {
-      return(
+      return (
         <>
-          <Loader isLoading={true}/>
+          <Loader isLoading={true} />
         </>
       )
     }

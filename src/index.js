@@ -13,7 +13,7 @@ reach.setProviderByName(Provider.TEST_NET)
 
 ReactDOM.render(
   <React.StrictMode>
-    <App reach={reach}/>
+    <App reach={reach} backend={backend} />
   </React.StrictMode>,
   document.getElementById('root')
 );

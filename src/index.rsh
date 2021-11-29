@@ -8,11 +8,6 @@ const User = {
 };
 const gotHere = "got here";
 
-const Logger = {
-  logString: Fun([Bytes(8)], Null),
-  logInt: Fun([UInt], Null),
-  logBool: Fun([Bool], Null)
-};
 /**
  * 
  * @param totalSupply Supply of non-network token in contract
@@ -29,7 +24,6 @@ export const main = Reach.App(() => {
     ...User,
     name: Bytes(64),
     paidBy: Fun([Bytes(64), UInt, UInt, Address], Null), //<(name, amount-of-n-token, price-of-n-n-token)
-    ...Logger
   });
 
   const NormalUser = ParticipantClass('NormalUser', {
@@ -48,7 +42,7 @@ export const main = Reach.App(() => {
 
   // Create token
   const supply = 10000;
-  const tok = new Token({ name: '01234567890123456789012345678901', symbol: '01234567', supply: supply });
+  const tok = new Token({ name: 'daaradaaradaaradaaradaaradaarada', symbol: 'DRADRADR', supply: supply });
   commit();
 
   //Display minted token's supply and price to Omega user

@@ -40,3 +40,19 @@ font-family: 'Montserrat', sans-serif;
 
 
 twin summer bid canoe indoor property tree whisper shoot sentence harsh pet misery license foam scale enhance purpose view negative river include world absent frog
+
+
+
+Important Interactions
+
+//all
+interact.name
+interact.acceptToken() 
+interact.showBalance()
+interact.displayTokenDetails(balance, newPrice)
+
+// buyer
+interact.buyToken(balance(tok), newPrice)
+
+// omega
+interact.paidBy(normalName, buyTok, newPrice, normalUserAccount)

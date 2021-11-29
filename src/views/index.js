@@ -3,6 +3,7 @@ import OmegaLogInView from './OmegaLogInView'
 import ConnectAccountView from './ConnectAccountView'
 import CreateContractView from './CreateContractView'
 import { Views } from '../utils/constants'
+import React from 'react'
 
 const RenderView = (parent, view = "") => {
     switch (view) {

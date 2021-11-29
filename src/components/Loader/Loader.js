@@ -1,6 +1,7 @@
+import React from 'react'
 import styles from './Loader.module.css'
 const Loader = (props) => {
-    const style = props.isLoading? styles.holder : styles.hide;
+    const style = props.isLoading ? styles.holder : styles.hide;
     return (
         <div className={style}>
             <div className={styles.box}>

@@ -1,7 +1,8 @@
+import React from 'react'
 import styles from './OmegaUserLogIn.module.css'
 
 const OmegaUserLogIn = (props) => {
-  const extraClass = props.areDetailsCorrect? styles.hide : ''
+    const extraClass = props.areDetailsCorrect ? styles.hide : ''
     return (
         <div className={styles.container}>
             <section className="subscribe">
@@ -20,24 +21,24 @@ const OmegaUserLogIn = (props) => {
                                     </div>
                                 </div>
                                 <div className="col-md-12">
-                                    <form className="row form" style={{display: "flex", justifyContent: "center"}} onSubmit={props.handleSubmit}>
+                                    <form className="row form" style={{ display: "flex", justifyContent: "center" }} onSubmit={props.handleSubmit}>
                                         <div className="col-lg-7 col-md-8 col-sm-12 form-group">
-                                            <input 
-                                                type="text" 
-                                                className="form-control" 
-                                                placeholder="Enter verified username" 
-                                                required 
-                                                onChange={props.handleChange} 
-                                                name="omegaUsername" 
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                placeholder="Enter verified username"
+                                                required
+                                                onChange={props.handleChange}
+                                                name="omegaUsername"
                                                 value={props.username}
                                             />
                                         </div>
                                         <div className="col-lg-7 col-md-8 col-sm-12 form-group">
-                                            <input 
-                                                type="password" 
-                                                className="form-control" 
-                                                placeholder="Enter correct passcode" 
-                                                required 
+                                            <input
+                                                type="password"
+                                                className="form-control"
+                                                placeholder="Enter correct passcode"
+                                                required
                                                 onChange={props.handleChange}
                                                 name="omegaPassword"
                                                 value={props.password}

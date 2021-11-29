@@ -1,8 +1,9 @@
+import React from 'react'
 import OmegaUserLogIn from '../components/OmegaUserLogIn/OmegaUserLogIn'
 
-const OmegaLogInView = ({parent}) =>{
+const OmegaLogInView = ({ parent }) => {
     return (
-        <OmegaUserLogIn 
+        <OmegaUserLogIn
             password={parent.state.omegaPassword}
             username={parent.state.omegaUsername}
             handleSubmit={parent.handleOmegaLogInSubmit}

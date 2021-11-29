@@ -10,13 +10,14 @@ import './App.css';
 class App extends React.Component {
   state = {
     reach: this.props.reach,
+    backend: this.props.backend,
     account: {},
     hasDefaultAccount: 'unknown',
 
     view: Views.INDEX_VIEW,
     omegaPassword: '',
     omegaUsername: '',
-    canLogOut: false, 
+    canLogOut: false,
     omegaDetailsAreCorrect: true
   }
 
@@ -28,6 +29,9 @@ class App extends React.Component {
     this.addAccount = functions.addAccount.bind(this)
     this.handleLogOut = functions.handleLogOut.bind(this)
     this.connectDefaultAccount = functions.connectDefaultAccount.bind(this)
+    this.createContract = functions.createContract.bind(this)
+    this.createParticipantInteractInterface = functions.createParticipantInteractInterface.bind(this)
+    this.formatCurrency = functions.formatCurrency.bind(this)
 
     // Get contract information from API service
     this.fetchContractInformation()
@@ -36,7 +40,7 @@ class App extends React.Component {
   render() {
     return (
       <div class="App">
-        <Navbar canLogOut={this.state.canLogOut} handleLogOut={this.handleLogOut}/>
+        <Navbar canLogOut={this.state.canLogOut} handleLogOut={this.handleLogOut} />
         {RenderView(this, this.state.view)}
       </div>
     );

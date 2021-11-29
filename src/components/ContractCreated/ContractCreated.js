@@ -2,7 +2,7 @@ import React from 'react'
 import styles from './CreateContract.module.css'
 import { useEffect, useState } from 'react'
 
-const CreateContract = ({ parent }) => {
+const ContractCreated = ({ parent }) => {
   const [balance, setBalance] = useState(0)
   const getTokenBalance = async () => {
     let balance = await parent.state.reach.balanceOf(parent.state.account);
@@ -47,4 +47,4 @@ const CreateContract = ({ parent }) => {
   )
 }
 
-export default CreateContract
+export default ContractCreated

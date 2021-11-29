@@ -1,8 +1,9 @@
+import React from 'react'
 import Loader from '../components/Loader/Loader'
 
-const IndexView = ({state}) => {
+const IndexView = ({ state }) => {
     return (
-        <Loader isLoading={state.isLoading || true}/>
+        <Loader isLoading={state.isLoading || true} />
     )
 }
 
