@@ -7,7 +7,13 @@ const ContractCreated = ({ parent }) => {
   
   useEffect(async () => {
     console.log(parent.state.contractAdddress)
-      setAddress(parent.state.contractAddress)
+    if(parent.state.contract) {
+      parent.state.contract.getInfo().then((info) => {
+        setAddress(JSON.stringify(info))
+      })
+      .catch((err) => console.log(err))
+    }
+    
   })
 
   return (

@@ -114,23 +114,32 @@ async function createContract() {
   console.log(contract)
   console.log('Communicating with back end...')
 
-  const options = {
-    method: "POST",
-    headers: {
-      "Content-type": "application/json"
-    },
-    body: JSON.stringify({ contract }),
-  }
+  this.setState({isLoading: true })
 
-  this.setState({ contract: contract, isLoading: true })
+  contract.getInfo().then(info => {
+    this.setState({contractAddress: JSON.stringify(info), contract: contract, })
 
-  fetch(`${API_BASE_URL}/contract-information`, options)
-  .then(response => response.json())
-  .then(data => {
-    console.log(data)
+    const options = {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json"
+      },
+      body: {contract, address: JSON.stringify(info)},
+    }
+
+    fetch(`${API_BASE_URL}/contract-information`, options)
+    .then(response => response.json())
+    .then(data => {
+      console.log(data)
+    })
+    .catch(err => {
+      console.log(err)
+    })
   })
   
+  
   try {
+    
     await this.state.backend.OmegaUser(contract, interact)
     // const contractAddress = await contract.getInfo()
     // console.log(contractAddress)
