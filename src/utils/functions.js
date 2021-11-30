@@ -1,4 +1,4 @@
-import { API_BASE_URL, Views } from "./constants";
+import { API_BASE_URL, Views, User } from "./constants";
 
 /**
  * @desc Gets the existing contract information from database. If none, allow an Omega User create one.
@@ -6,9 +6,15 @@ import { API_BASE_URL, Views } from "./constants";
 function fetchContractInformation() {
   fetch(`${API_BASE_URL}/contract-information`)
     .then(response => response.json())
-    .then(data => {
+    .then(async data => {
       let newView = !data.isContract ? Views.OMEGA_LOG_IN : Views.CONNECT_ACCOUNT
-      this.setState({ view: newView })
+      
+      this.setState({ 
+        view: newView, 
+        user: newView === Views.OMEGA_LOG_IN? User.OMEGA_USER : User.NORMAL_USER,
+        contract: data.isContract? data.contract.contract : this.state.contract,
+        contractAddress: data.isContract? data.contract.address : this.state.contractAddress
+      })
     })
     .catch(e => {
       // If no response is gotten from API service, try connecting again.
@@ -58,6 +64,30 @@ function handleOmegaInputChange(event) {
 }
 
 /**
+ * @desc This handles the event triggered when a normal user enters their username or password
+ * @param {*} event 
+ */
+ function handleNormalUserInputChange(event) {
+   let numberOfTokens, priceOfTokens
+   if(event.target.name === 'numberOfTokens') {
+      numberOfTokens = event.target.value;
+      priceOfTokens = numberOfTokens === 0? 0 : numberOfTokens * this.state.price
+   }
+
+   if (event.target.name === 'priceOfTokens') {
+      priceOfTokens = event.target.value;
+      numberOfTokens = priceOfTokens === 0 ? 0 : priceOfTokens / this.state.price
+   }
+
+   if(priceOfTokens > this.state.reach.balanceOf(this.state.account)  || numberOfTokens > this.state.supply){
+
+   } else {
+    this.setState({ [event.target.name]: event.target.value })
+   }
+  
+}
+
+/**
  * @desc This triggers a log out of the omega user.
  */
 function handleLogOut() {
@@ -77,7 +107,8 @@ function handleLogOut() {
 async function connectDefaultAccount() {
   try {
     let acct = await this.state.reach.getDefaultAccount();
-    this.setState({ account: acct, hasDefaultAccount: true });
+    let currentView = this.state.user === User.OMEGA_USER? Views.CREATE_CONTRACT : Views.BUY_TOKEN_VIEW;
+    this.setState({ account: acct, hasDefaultAccount: true, view: currentView});
     return true
   }
   catch (error) {
@@ -92,7 +123,8 @@ async function connectDefaultAccount() {
  * @param {*} account contract object to be added to application
  */
 function addAccount(account) {
-  this.setState({ account: account, view: Views.CREATE_CONTRACT })
+  let currentView = this.state.user === User.OMEGA_USER? Views.CREATE_CONTRACT : Views.BUY_TOKEN_VIEW;
+  this.setState({ account: account, view: currentView })
 }
 
 async function createContract() {
@@ -129,7 +161,7 @@ async function createContract() {
       headers: {
         "Content-type": "application/json"
       },
-      body: obj
+      body: JSON.stringify(obj)
     }
 
     console.log(options)
@@ -185,10 +217,88 @@ function createParticipantInteractInterface(name = "") {
     console.log(supply)
     console.log(`price: ${price}`)
     console.log(`Amount of tokens remaining: ${supply} \nPrice of Token: ${this.formatCurrency(price)}`)
-    this.setState({supply: supply, price: (this.formatCurrency(price) * 1000000)})
+    this.setState({supply: supply, price: (this.formatCurrency(price))})
   }
 
   return interact
+}
+
+/**
+ * @desc Connect to contract with account of normal user.
+ */
+async function connectToContract() {
+  const contractAddress = this.state.contractAddress
+  console.log(`contract address to connect to: ${contractAddress}`)
+
+  const account = this.state.account
+  console.log(`account we are to connect to contract with: ${account.getAddress()}`)
+
+  console.log(`Connecting to contract`)
+  const contract = account.contract(this.state.backend, JSON.parse(contractAddress))
+  console.log(`Connected successfully.`)
+  console.log(`Waiting for response from backend`)
+
+  const interact = this.createParticipantInteractInterface();
+
+  /**
+   * @description Asks user if they want to buy a no-network token, then asks for how much of it they want
+   * @returns Number of non-network tokens user wants to buy
+   */
+  interact.buyToken = async (supply, tokenPrice) => {
+    console.log('Interacting')
+    const balance = this.formatCurrency(await this.state.reach.balanceOf(this.state.account))
+    const price = this.formatCurrency(tokenPrice)
+
+    this.setState({price: price, supply: supply})
+
+    console.log("We waiting here")
+    let numberOfToks = await this.getUserResponse()
+    numberOfToks = this.state.reach.parseCurrency(numberOfToks)
+    console.log("Made it to the other side")
+    console.log(`number of tokens: ${numberOfToks}`)
+    
+    return [(numberOfToks), this.state.account.networkAccount]
+    // while (true) {
+    //   numberOfToks = willBuy ? await ask(`How many non-network tokens would you like to buy?`, x => fmt(stdlib.parseCurrency(x))) : 0
+    //   if (numberOfToks * price > balance) {
+    //     console.log(`You do not have enough tokens for this transaction. Please don't try to bite more than you can chew`)
+    //     continue
+    //   } else {
+    //     if (numberOfToks > supply) {
+    //       console.log(`You're asking for more tokens than are available. Check the amount of tokens then adjust your demand`)
+    //       continue
+    //     } else {
+          
+    //       break
+    //     }
+    //   }
+    // }
+  }
+
+  this.state.backend.NormalUser(contract, interact)
+}
+
+function buyToken(event) {
+  event.preventDefault()
+
+  if(this.state.numberOfTokens > this.state.supply){
+    alert(`You're asking for more tokens than are available. Check the amount of tokens then adjust your demand`)
+  }
+  else if (this.state.priceOfTokens > this.state.reach.balanceOf(this.state.account)) {
+    alert(`You do not have enough tokens for this transaction. Please don't try to bite more than you can chew`)
+  }
+  else {
+    this.resolved(this.state.numberOfTokens)
+  }
+}
+
+/**
+ * @description Formats the currency amount to 4 decimal places.
+ * @param amount Amount of currency to be formatted.
+ * @returns Formatted number.
+ */
+ function formatCurrency(amount) {
+  return this.state.reach.formatCurrency(amount, 8);
 }
 
 export {
@@ -200,14 +310,9 @@ export {
   addAccount,
   createContract,
   createParticipantInteractInterface,
-  formatCurrency
+  formatCurrency,
+  connectToContract,
+  handleNormalUserInputChange,
+  buyToken
 }
 
-/**
- * @description Formats the currency amount to 4 decimal places.
- * @param amount Amount of currency to be formatted.
- * @returns Formatted number.
- */
-function formatCurrency(amount) {
-  return this.state.reach.formatCurrency(amount, 8);
-}

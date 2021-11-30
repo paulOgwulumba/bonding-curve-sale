@@ -41,8 +41,8 @@ export const main = Reach.App(() => {
   OmegaUser.publish(name);
 
   // Create token
-  const supply = 10000;
-  const tok = new Token({ name: 'daaradaaradaaradaaradaaradaarada', symbol: 'DRADRADR', supply: supply });
+  const supply = 1000000;
+  const tok = new Token({ name: Bytes(32).pad('DaaraCoin'), symbol: Bytes(8).pad('DRA'), supply: supply });
   commit();
 
   //Display minted token's supply and price to Omega user

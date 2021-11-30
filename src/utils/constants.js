@@ -1,4 +1,4 @@
-const AppStatus = {
+const User = {
     OMEGA_USER: 'Omega User',
     NORMAL_USER: 'Normal User',
 }
@@ -22,4 +22,4 @@ const Provider = {
   LOCAL_HOST: 'LocalHost'
 }
 
-export { AppStatus, Views, API_BASE_URL, Provider }
+export { User, Views, API_BASE_URL, Provider }

@@ -39,9 +39,7 @@ const ContractCreated = ({ parent }) => {
                   </div>
                 </div>
                 <div className="col-12">
-                  <button className={`btn btn-primary ${styles.spacing}`}>
-                    
-                  </button>
+                  
                 </div>
               </div>
             </div>

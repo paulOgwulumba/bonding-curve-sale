@@ -2,6 +2,7 @@ import IndexView from './IndexView'
 import OmegaLogInView from './OmegaLogInView'
 import ConnectAccountView from './ConnectAccountView'
 import CreateContractView from './CreateContractView'
+import BuyTokenView from './BuyTokenView'
 import { Views } from '../utils/constants'
 import React from 'react'
 
@@ -30,6 +31,11 @@ const RenderView = (parent, view = "") => {
         case Views.CREATE_CONTRACT: {
             return <CreateContractView parent={parent} />
             break;
+        }
+
+        case Views.BUY_TOKEN_VIEW: {
+          return <BuyTokenView parent={parent} />
+          break;
         }
 
         default: {

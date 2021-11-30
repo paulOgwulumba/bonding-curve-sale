@@ -9,6 +9,7 @@ import './App.css';
 
 class App extends React.Component {
   state = {
+    user: '',
     reach: this.props.reach,
     backend: this.props.backend,
     account: {},
@@ -17,13 +18,17 @@ class App extends React.Component {
     price: 0,
     isLoading: false,
     contractAddress: '0x',
-
     view: Views.INDEX_VIEW,
     omegaPassword: '',
     omegaUsername: '',
     canLogOut: false,
-    omegaDetailsAreCorrect: true
+    omegaDetailsAreCorrect: true,
+
+    numberOfTokens: 0,
+    priceOfTokens: 0,
   }
+
+  resolved;
 
   componentDidMount() {
     // Bind imported functions to App
@@ -36,6 +41,15 @@ class App extends React.Component {
     this.createContract = functions.createContract.bind(this)
     this.createParticipantInteractInterface = functions.createParticipantInteractInterface.bind(this)
     this.formatCurrency = functions.formatCurrency.bind(this)
+    this.connectToContract = functions.connectToContract.bind(this)
+    this.handleNormalUserInputChange = functions.handleNormalUserInputChange.bind(this)
+    this.buyToken = functions.buyToken.bind(this)
+
+    this.getUserResponse = async () => {
+      return await new Promise((resolve, reject) => {
+        this.resolved = resolve;
+      });
+    };
 
     // Get contract information from API service
     this.fetchContractInformation()
