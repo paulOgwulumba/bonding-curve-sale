@@ -16,16 +16,14 @@ const CreateContractView = ({ parent }) => {
     if(parent.state.isLoading === true){
       setView(Views.contractCreated)
     } 
-  })
+  }, [parent.state.isLoading, Views.contractCreated])
 
   switch (view) {
     case Views.isLoading: {
       return <Loader isLoading={true} />
-      break
     }
     case Views.contractCreated: {
       return <ContractCreated parent={parent} />
-      break;
     }
     default: {
       return (

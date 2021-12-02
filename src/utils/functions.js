@@ -120,10 +120,13 @@ async function connectDefaultAccount() {
 /**
  * This adds a new account to the application.
  * @param {*} account contract object to be added to application
+ * @param {Boolean} connectedWithMnemonic specifies if the account to be added was imorted with the use of a mnemonic key phrase or not.
  */
-function addAccount(account) {
+function addAccount(account, connectedWithMnemonic=false) {
+  
   let currentView = this.state.user === User.OMEGA_USER? Views.CREATE_CONTRACT : Views.BUY_TOKEN_VIEW;
-  this.setState({ account: account, view: currentView })
+
+  this.setState({ account: account, view: currentView, connectedWithMnemonic: connectedWithMnemonic })
 }
 
 async function createContract() {
@@ -236,7 +239,20 @@ async function connectToContract() {
   console.log(`contract address to connect to: ${contractAddress}`)
 
   const account = this.state.account
+  console.log(account)
   console.log(`account we are to connect to contract with: ${account.getAddress()}`)
+
+  const balanceObject = await this.state.reach.balanceOf(account)
+
+  const balance = this.formatCurrency(balanceObject)
+
+  console.log(balance)
+
+  if (balance == 0) {
+    alert('Your ALG balance is insufficient to interact with this contract. Please fund your account and try again.')
+    this.setState({view: Views.CONNECT_ACCOUNT})
+    return
+  } 
 
   console.log(`Connecting to contract`)
   const contract = account.contract(this.state.backend, JSON.parse(contractAddress))
@@ -250,7 +266,6 @@ async function connectToContract() {
    * @returns Number of non-network tokens user wants to buy
    */
   interact.buyToken = async (supply, tokenPrice) => {
-    const balance = this.formatCurrency(await this.state.reach.balanceOf(this.state.account))
     const price = this.formatCurrency(tokenPrice)
 
     this.setState({price: price, supply: supply})

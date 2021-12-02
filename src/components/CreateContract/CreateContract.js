@@ -4,12 +4,13 @@ import { useEffect, useState } from 'react'
 
 const CreateContract = ({ parent }) => {
   const [balance, setBalance] = useState(0)
-  const getTokenBalance = async () => {
-    let balance = await parent.state.reach.balanceOf(parent.state.account);
-    return parent.state.reach.formatCurrency(balance, 6)
-  }
+  
 
-  useEffect(async () => {
+  useEffect(() => {
+    const getTokenBalance = async () => {
+      let balance = await parent.state.reach.balanceOf(parent.state.account);
+      return parent.state.reach.formatCurrency(balance, 6)
+    }
 
     const doing = async () => {
       let bal = await getTokenBalance()
@@ -17,7 +18,7 @@ const CreateContract = ({ parent }) => {
     }
 
     doing()
-  }, [getTokenBalance])
+  }, [parent.state.reach, parent.state.account])
 
   return (
     <div className={styles.container}>

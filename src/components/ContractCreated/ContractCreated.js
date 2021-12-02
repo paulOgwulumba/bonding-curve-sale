@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 const ContractCreated = ({ parent }) => {
   const [address, setAddress] = useState("0x")
   
-  useEffect(async () => {
+  useEffect(() => {
     if(parent.state.contract) {
       parent.state.contract.getInfo().then((info) => {
         setAddress(JSON.stringify(info))

@@ -6,12 +6,16 @@ const BuyToken = ({parent, grandparent}) => {
   const [supply, setSupply] = useState(0)
   const [price, setPrice] = useState(0)
 
-  const getTokenBalance = async () => {
-    let balance = await grandparent.state.reach.balanceOf(grandparent.state.account);
-    return grandparent.state.reach.formatCurrency(balance, 6)
-  }
 
-  useEffect(async () => {
+  useEffect(() => {
+    const getTokenBalance = async () => {
+      const getBal = async () => {
+        return await grandparent.state.reach.balanceOf(grandparent.state.account);
+      }
+      let balance = await getBal()
+      return grandparent.state.reach.formatCurrency(balance, 6)
+    }
+
     const doing = async () => {
       let bal = await getTokenBalance()
       setBalanceOfALG(bal)
@@ -20,7 +24,7 @@ const BuyToken = ({parent, grandparent}) => {
 
     setSupply(grandparent.state.supply)
     setPrice(grandparent.state.price)
-  }, [getTokenBalance])
+  }, [ grandparent.state.supply, grandparent.state.price, grandparent.state.reach, grandparent.state.account])
   return (
     <div className={styles.container}>
             <section className="subscribe">

@@ -13,29 +13,24 @@ const RenderView = (parent, view = "") => {
             return (
                 <IndexView state={parent.state} />
             )
-            break;
         }
 
         case Views.OMEGA_LOG_IN: {
             return (
                 <OmegaLogInView parent={parent} />
             )
-            break;
         }
 
         case Views.CONNECT_ACCOUNT: {
             return <ConnectAccountView parent={parent} connectAccount={parent.connectDefaultAccount} />
-            break;
         }
 
         case Views.CREATE_CONTRACT: {
             return <CreateContractView parent={parent} />
-            break;
         }
 
         case Views.BUY_TOKEN_VIEW: {
           return <BuyTokenView parent={parent} />
-          break;
         }
 
         default: {

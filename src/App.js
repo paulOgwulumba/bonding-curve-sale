@@ -12,7 +12,7 @@ class App extends React.Component {
     user: '',
     reach: this.props.reach,
     backend: this.props.backend,
-    account: {},
+    account: null,
     hasDefaultAccount: 'unknown',
     supply: 0,
     price: 0,
@@ -27,6 +27,8 @@ class App extends React.Component {
     token: {},
     numberOfTokens: '',
     priceOfTokens: '',
+
+    connectedWithMnemonic: false,
   }
 
   resolved;
@@ -58,7 +60,7 @@ class App extends React.Component {
 
   render() {
     return (
-      <div class="App">
+      <div className="App">
         <Navbar canLogOut={this.state.canLogOut} handleLogOut={this.handleLogOut} />
         {RenderView(this, this.state.view)}
       </div>
