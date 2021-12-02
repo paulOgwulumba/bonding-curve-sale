@@ -79,10 +79,9 @@ function handleOmegaInputChange(event) {
       numberOfTokens = priceOfTokens === 0 ? 0 : priceOfTokens / this.state.price
    }
 
-   if(priceOfTokens > this.state.reach.balanceOf(this.state.account)  || numberOfTokens > this.state.supply){
-
-   } else {
-    this.setState({ [event.target.name]: event.target.value })
+   if(priceOfTokens > this.state.reach.balanceOf(this.state.account)  || numberOfTokens > this.formatCurrency(this.state.supply)){} 
+   else {
+    this.setState({ numberOfTokens: numberOfTokens, priceOfTokens: priceOfTokens })
    }
   
 }
@@ -192,11 +191,15 @@ async function createContract() {
 
 function createParticipantInteractInterface(name = "") {
   const interact = { ...this.state.reach.hasRandom };
-  interact.name = name === "" ? "Omega Man" : name;
+  interact.name = name === "" ? "Omega User" : name;
 
   interact.acceptToken = async (token) => {
+    console.log('..........INTERACT.ACCEPTTOKEN..........')
     const tokenID = this.state.reach.bigNumberToNumber(token)
+    this.setState({token: token})
     await this.state.account.tokenAccept(tokenID)
+    console.log('Token Accepted successfully')
+    console.log('....................')
   }
 
   /**
@@ -204,8 +207,9 @@ function createParticipantInteractInterface(name = "") {
    * @param tok Token datatype 
    */
   interact.showBalance = async (tok) => {
-    // console.log(`Your balance is ${formatCurrency(await stdlib.balanceOf(accUser))} network tokens and ${formatCurrency(await stdlib.balanceOf(accUser, tok))} non-network tokens`);
+    console.log('..........INTERACT.SHOWBALANCE..........')
     console.log(`Your balance is ${this.formatCurrency(await this.state.reach.balanceOf(this.state.account))} network tokens and ${this.formatCurrency(this.state.reach.parseCurrency(await this.state.reach.balanceOf(this.state.account, tok)))} non-network tokens`);
+    console.log('....................')
   }
 
   /**
@@ -214,9 +218,10 @@ function createParticipantInteractInterface(name = "") {
    * @param price price of one non-network token with respect to network token
    */
   interact.displayTokenDetails = (supply, price) => {
-    console.log(supply)
-    console.log(`price: ${price}`)
+    
+    console.log(`..........INTERACT.DISPLAYTOKENDETAILS..........`)
     console.log(`Amount of tokens remaining: ${supply} \nPrice of Token: ${this.formatCurrency(price)}`)
+    console.log('....................')
     this.setState({supply: supply, price: (this.formatCurrency(price))})
   }
 
@@ -245,19 +250,20 @@ async function connectToContract() {
    * @returns Number of non-network tokens user wants to buy
    */
   interact.buyToken = async (supply, tokenPrice) => {
-    console.log('Interacting')
     const balance = this.formatCurrency(await this.state.reach.balanceOf(this.state.account))
     const price = this.formatCurrency(tokenPrice)
 
     this.setState({price: price, supply: supply})
 
-    console.log("We waiting here")
+    console.log("....INTERACT.BUYTOKEN......")
+    console.log("Waiting for User response to proceed")
     let numberOfToks = await this.getUserResponse()
     numberOfToks = this.state.reach.parseCurrency(numberOfToks)
-    console.log("Made it to the other side")
-    console.log(`number of tokens: ${numberOfToks}`)
-    
+    console.log("User response gotten")
+    console.log(`Number of tokens user wants to buy: ${numberOfToks}`)
+    console.log('...............')
     return [(numberOfToks), this.state.account.networkAccount]
+
     // while (true) {
     //   numberOfToks = willBuy ? await ask(`How many non-network tokens would you like to buy?`, x => fmt(stdlib.parseCurrency(x))) : 0
     //   if (numberOfToks * price > balance) {
@@ -273,6 +279,30 @@ async function connectToContract() {
     //     }
     //   }
     // }
+  }
+
+  interact.giveFeedBack1 = () => {
+    console.log('.......INTERACT.GIVEFEEDBACK.ONE.........')
+    console.log(`pinging.`)
+    console.log('.................................')
+  }
+
+  interact.giveFeedBack2 = () => {
+    console.log('.......INTERACT.GIVEFEEDBACK.TWO..........')
+    console.log(`Ping ping.`)
+    console.log('...................................................')
+  }
+
+  interact.giveFeedBack3 = () => {
+    console.log('.......INTERACT.GIVEFEEDBACK.THREE..........')
+    console.log(`ping ping ping ping.`)
+    console.log('.....................................................')
+  }
+
+  interact.giveFeedBack4 = () => {
+    console.log('.......INTERACT.GIVEFEEDBACK.FOUR.........')
+    console.log(`ping!!!!!!!!!!!!!!!.`)
+    console.log('.................................')
   }
 
   this.state.backend.NormalUser(contract, interact)

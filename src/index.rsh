@@ -15,7 +15,7 @@ const gotHere = "got here";
  */
 const updatePrice = (totalSupply) => {
   if (totalSupply == 0) return 50000;
-  else return 50000000000 / totalSupply;
+  else return 50000000000000000 / totalSupply;
   // return totalSupply/4
 };
 
@@ -30,6 +30,10 @@ export const main = Reach.App(() => {
     ...User,
     name: Bytes(64),
     buyToken: Fun([UInt, UInt], Tuple(UInt, Address)),  //supply of non-network tokens
+    giveFeedBack1: Fun([], Null),                 //give feedback to normal user on state of contract runtime
+    giveFeedBack2: Fun([], Null),
+    giveFeedBack3: Fun([], Null),
+    giveFeedBack4: Fun([], Null)
   });
   deploy();
 
@@ -41,7 +45,7 @@ export const main = Reach.App(() => {
   OmegaUser.publish(name);
 
   // Create token
-  const supply = 1000000;
+  const supply = 1000000000000000;
   const tok = new Token({ name: Bytes(32).pad('DaaraCoin'), symbol: Bytes(8).pad('DRA'), supply: supply });
   commit();
 
@@ -68,21 +72,28 @@ export const main = Reach.App(() => {
       const [buyTok, me] = declassify(interact.buyToken(balance(tok), newPrice));
       const tokToPay = buyTok * newPrice;
       assume(buyTok <= balance(tok));
+
+      interact.giveFeedBack1();                                                      //here1
     });
+    NormalUser.interact.giveFeedBack2();                                                             //here
     NormalUser.publish(buyTok, newPrice, normalUserAccount, me, normalName, tokToPay)
       .pay(tokToPay)
       .when(me == normalUserAccount)
-      .timeout(relativeTime(5), () => {
+      .timeout(relativeTime(5000), () => {
         NormalUser.publish();
+        NormalUser.interact.giveFeedBack3();
         [totalBought, totalPaid] = [totalBought, totalPaid];
         continue;
       });
-    OmegaUser.interact.paidBy(normalName, buyTok, newPrice, normalUserAccount)
+
+                                                                 //here
+    //OmegaUser.interact.paidBy(normalName, buyTok, newPrice, normalUserAccount)
     require(this == normalUserAccount);
 
     require(buyTok <= balance(tok));
     transfer(buyTok, tok).to(this);
-    OmegaUser.interact.displayTokenDetails(balance(tok), updatePrice(balance(tok)));
+    NormalUser.interact.giveFeedBack4();                                                            //here
+    //OmegaUser.interact.displayTokenDetails(balance(tok), updatePrice(balance(tok)));
     [totalBought, totalPaid] = [totalBought + buyTok, totalPaid + tokToPay];
     continue;
   }

@@ -17,15 +17,16 @@ class App extends React.Component {
     supply: 0,
     price: 0,
     isLoading: false,
-    contractAddress: '0x',
+    contractAddress: '_none_',
     view: Views.INDEX_VIEW,
     omegaPassword: '',
     omegaUsername: '',
     canLogOut: false,
     omegaDetailsAreCorrect: true,
 
-    numberOfTokens: 0,
-    priceOfTokens: 0,
+    token: {},
+    numberOfTokens: '',
+    priceOfTokens: '',
   }
 
   resolved;

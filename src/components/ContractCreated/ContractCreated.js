@@ -6,7 +6,6 @@ const ContractCreated = ({ parent }) => {
   const [address, setAddress] = useState("0x")
   
   useEffect(async () => {
-    console.log(parent.state.contractAdddress)
     if(parent.state.contract) {
       parent.state.contract.getInfo().then((info) => {
         setAddress(JSON.stringify(info))
@@ -30,7 +29,7 @@ const ContractCreated = ({ parent }) => {
                     <p><b>Contract Address:</b> <br /> {address}</p>
                     <p>
                       <b>Token Supply:</b> <br />
-                      {parseInt(parent.state.supply._hex, 16) || 0}
+                      {parent.formatCurrency(parent.state.supply) || 0}
                     </p>
                     <p>
                       <b>Token Current Price:</b> <br />

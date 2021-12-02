@@ -45,7 +45,7 @@ const BuyToken = ({parent, grandparent}) => {
                                         </label>
 
                                         <label className="col-lg-7 col-md-8 col-sm-12 form-group">
-                                          Daara Token Supply: <span className={styles.info}>{grandparent.formatCurrency(supply) * 1000000}</span>
+                                          Daara Token Supply: <span className={styles.info}>{grandparent.formatCurrency(supply)}</span>
                                         </label>
 
                                         <label className="col-lg-7 col-md-8 col-sm-12 form-group">
@@ -53,13 +53,14 @@ const BuyToken = ({parent, grandparent}) => {
                                         </label>
                                         
                                         <div className="col-lg-7 col-md-8 col-sm-12 form-group">
+                                            <label>Number of Daara Tokens</label>
                                             <input
                                                 type="number"
                                                 className="form-control"
                                                 placeholder="How many DRA Tokens do you want to buy?"
                                                 min="0"
                                                 max={grandparent.state.supply}
-                                                step="0.01"
+                                                step="0.0001"
                                                 value={grandparent.state.numberOfTokens}
                                                 onChange={grandparent.handleNormalUserInputChange}
                                                 required                                             
@@ -67,11 +68,12 @@ const BuyToken = ({parent, grandparent}) => {
                                             />
                                         </div>
                                         <div className="col-lg-7 col-md-8 col-sm-12 form-group">
+                                            <label>Cost in ALG</label>
                                             <input
                                                 type="number"
                                                 className="form-control"
                                                 placeholder="Cost in ALG"
-                                                min="0"
+                                                min="0.0001"
                                                 max={balanceOfALG}
                                                 step="0.01"
                                                 value={grandparent.state.priceOfTokens}
