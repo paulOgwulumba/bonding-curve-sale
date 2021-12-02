@@ -182,17 +182,18 @@ const CreateOrImportAccount = (props) => {
                     <section className="section-1">
                         <div className="jumbotron d-flex align-items-center" style={{minWidth: "1000px"}}>
                             <div className="gradient"></div>
-                            <div className="container content">
+                            <div className="container content" >
                                 <h1>Daara Token</h1>
                                 <h2 className="text-center">Import Existing Acount</h2>
-                                <p className="text-center">
-                                  <small className={`text-warning ${mnemonicIsValid ? styles.hide : ''}`}>This mnemonic key does not exist. Check again and re-enter.</small>
+                                <p className="text-left text-warning">
+                                    Enter the correct 25-word mnemonic key phrase of your account to proceed.
                                 </p>
-                                <p className="text-center">
-                                  <small className={`text-success ${isImportSuccessful ? '' : styles.hide}`}>Account imported successfully!</small>
+                                
+                                <p className={`text-center ${isImportSuccessful ? '' : styles.hide}`}>
+                                  <small className={`text-success`}>Account imported successfully!</small>
                                 </p>
-                                <form className="col-12" onSubmit={(event) => handleImportAccount(mnemonic, event)}>
-                                  <div className="col-12 form-group">
+                                <form className={`col-12`} style={{marginTop: "0px"}} onSubmit={(event) => handleImportAccount(mnemonic, event)}>
+                                  <div className={`${styles.form}`}>
                                     <textarea
                                       className={`${styles.textarea}`}
                                       placeholder="Enter account mnemonic key phrases."
@@ -209,6 +210,10 @@ const CreateOrImportAccount = (props) => {
                                     <button className="btn btn-success" onClick={() => setStatus(Status.IMPORT_ACCOUNT)}>
                                       Import
                                     </button>
+                                  </p>
+                                  
+                                  <p className={`text-center ${mnemonicIsValid ? styles.hide : ''}`} style={{marginTop: "0px", marginBottom: "0px"}}>
+                                    <small className={`text-danger`}>This mnemonic key does not exist. Check again and re-enter.</small>
                                   </p>
                                 </form>
                             </div>                                                   

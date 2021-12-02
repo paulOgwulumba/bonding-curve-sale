@@ -223,7 +223,7 @@ header h6 {
 nav {
     margin-top: .3rem;
     background-color: #f7da17 !important;
-    opacity: .95;
+    opacity: 1;
     -webkit-box-shadow: 0 4px 4px -2px rgba(0, 0, 0, 0.1607843137254902);
     -moz-box-shadow: 0 4px 4px -2px rgba(0, 0, 0, 0.1607843137254902);
     box-shadow: 0 4px 4px -2px rgba(0, 0, 0, 0.1607843137254902);
@@ -236,10 +236,10 @@ nav:before {
 }
 
 nav .logo-text {
-    color: rgb(51, 39, 39);
-    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    font-weight: 900;
-    font-size: 2rem;
+    font-size: 50px;
+    padding-bottom: 30px;
+    color: rgba(24, 23, 23);
+    font-family: 'Changa One', cursive;
 }
 
 header .social-icons ul > li:nth-child(1) {
@@ -332,8 +332,8 @@ header h6 {
 }
 
 .jumbotron {
-    width: 100%;
-    min-height: 500px;
+    width: 1000px;
+    height: fit-content;
     margin-bottom: 0;
     position: relative;
     /* background-image: url(../images/banner-bg-1.jpg); */
@@ -360,7 +360,7 @@ header h6 {
     color: #ffffff;
     font-weight: 600;
     line-height: 35px;
-    padding-bottom: 30px;
+    padding-bottom: 20px;
     letter-spacing: 0.5px;
     font-size: 16px;
 }
@@ -1460,7 +1460,7 @@ address p {
 
 @media screen and (max-width: 1440px) {
     .jumbotron {
-        height: 540px;
+        height: fit-content;
     }
 }
 
@@ -1802,6 +1802,9 @@ address p {
     .section-3 {
         padding: 30px 0;
     }
+    .jumbotron {
+      width: 600px;
+    }
     .jumbotron p {
         padding-bottom: 15px;
     }
@@ -1890,6 +1893,7 @@ address p {
     }
     .jumbotron {
         height: 410px;
+        width: 400px;
     }
     .jumbotron h1 {
         font-size: 25px;
@@ -2021,6 +2025,10 @@ address p {
     .jumbotron p {
         line-height: 20px;
     }
+
+    .jumbotron {
+      width: 400px;
+    }
     .subscribe ::placeholder {
         font-size: 12px;
     }
@@ -2046,6 +2054,10 @@ address p {
     .jumbotron .btn-success,
     .jumbotron .btn-success:not(:disabled):not(.disabled):active {
         font-size: 11px;
+    }
+
+    .jumbotron {
+      width: 400px;
     }
     .about h3 {
         font-size: 20px;
