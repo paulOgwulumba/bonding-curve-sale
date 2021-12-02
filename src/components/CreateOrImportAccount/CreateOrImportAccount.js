@@ -159,7 +159,7 @@ const CreateOrImportAccount = (props) => {
                             <div className="gradient"></div>
                             <div className="container content">
                                 <h1>Daara Token</h1>
-                                <h2>No default account detected!</h2>
+                                <h2 className="text-center">No default account detected!</h2>
                                 <p>
                                   No account was found connected to your browser. Pick one of the options below to either import an existing account or create a new one.
                                   <br/>
@@ -203,6 +203,27 @@ const CreateOrImportAccount = (props) => {
                       </div>
                       <div className="col-md-1 sub-hidden"></div>
                     </form>
+
+                    <section className="section-1">
+                        <div className="jumbotron d-flex align-items-center">
+                            <div className="gradient"></div>
+                            <div className="container content">
+                                <h1>Daara Token</h1>
+                                <h2 className="text-center">Import Existing Acount</h2>
+                                <p>
+                                  <small className="text-warning">For better experience, import an existing account.*</small>
+                                </p>
+                                <p className="text-center" style={{width: "100%"}}>
+                                  <button className="btn btn-success" onClick={() => setStatus(Status.IMPORT_ACCOUNT)}>
+                                    Import Account
+                                  </button>
+                                  <button className="btn btn-default" onClick={createNewAccount}>
+                                    Create Account
+                                  </button>
+                                </p>
+                            </div>                                                   
+                        </div>
+                    </section>
                   </div>
 
                   <div className={status === Status.CREATE_ACCOUNT ? '' : styles.hide}>
