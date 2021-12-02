@@ -178,49 +178,39 @@ const CreateOrImportAccount = (props) => {
                     </section>
                   </div>
 
-                  <div className={`col-md-12 ${status === Status.IMPORT_ACCOUNT ? '' : styles.hide}`}>
-
-                    <form className="row form" style={{ display: "flex", justifyContent: "center" }} onSubmit={(event) => handleImportAccount(mnemonic, event)}>
-                      <p className={`col-12`}><strong>Import Existing Account</strong></p> <br />
-                      <p className={`col-12 text-danger ${mnemonicIsValid ? styles.hide : ''}`}>This mnemonic key does not exist. Check again and re-enter.</p>
-                      <p className={`col-12 text-success ${isImportSuccessful ? '' : styles.hide}`}>Account imported successfully.</p>
-                      <div className="col-lg-7 col-md-8 col-sm-12 form-group">
-                        <textarea
-                          className={`${styles.textarea}`}
-                          placeholder="Enter account mnemonic key phrases."
-                          required
-                          value={mnemonic}
-                          onChange={(event) => {
-                            setMnemonic(event.target.value);
-                            setMnemonicIsValid(true)
-                          }}
-                        >
-
-                        </textarea>
-                      </div>
-                      <div className="col-12">
-                        <button className="btn btn-primary">Import Account</button>
-                      </div>
-                      <div className="col-md-1 sub-hidden"></div>
-                    </form>
-
+                  <div className={`${status === Status.IMPORT_ACCOUNT ? '' : styles.hide}`}>
                     <section className="section-1">
-                        <div className="jumbotron d-flex align-items-center">
+                        <div className="jumbotron d-flex align-items-center" style={{minWidth: "1000px"}}>
                             <div className="gradient"></div>
                             <div className="container content">
                                 <h1>Daara Token</h1>
                                 <h2 className="text-center">Import Existing Acount</h2>
-                                <p>
-                                  <small className="text-warning">For better experience, import an existing account.*</small>
+                                <p className="text-center">
+                                  <small className={`text-warning ${mnemonicIsValid ? styles.hide : ''}`}>This mnemonic key does not exist. Check again and re-enter.</small>
                                 </p>
-                                <p className="text-center" style={{width: "100%"}}>
-                                  <button className="btn btn-success" onClick={() => setStatus(Status.IMPORT_ACCOUNT)}>
-                                    Import Account
-                                  </button>
-                                  <button className="btn btn-default" onClick={createNewAccount}>
-                                    Create Account
-                                  </button>
+                                <p className="text-center">
+                                  <small className={`text-success ${isImportSuccessful ? '' : styles.hide}`}>Account imported successfully!</small>
                                 </p>
+                                <form className="col-12" onSubmit={(event) => handleImportAccount(mnemonic, event)}>
+                                  <div className="col-12 form-group">
+                                    <textarea
+                                      className={`${styles.textarea}`}
+                                      placeholder="Enter account mnemonic key phrases."
+                                      required
+                                      value={mnemonic}
+                                      onChange={(event) => {
+                                        setMnemonic(event.target.value);
+                                        setMnemonicIsValid(true)
+                                      }}
+                                    >
+                                    </textarea>
+                                  </div>
+                                  <p className="text-center" style={{width: "100%"}}>
+                                    <button className="btn btn-success" onClick={() => setStatus(Status.IMPORT_ACCOUNT)}>
+                                      Import
+                                    </button>
+                                  </p>
+                                </form>
                             </div>                                                   
                         </div>
                     </section>
