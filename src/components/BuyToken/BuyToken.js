@@ -71,7 +71,7 @@ const BuyToken = ({parent, grandparent}) => {
                           placeholder="How many DAR Tokens do you want to buy?"
                           min="0"
                           max={grandparent.state.supply}
-                          step="0.0001"
+                          
                           value={grandparent.state.numberOfTokens}
                           onChange={grandparent.handleNormalUserInputChange}
                           required                                             
@@ -85,7 +85,7 @@ const BuyToken = ({parent, grandparent}) => {
                         placeholder="Cost in ALG"
                         min="0.0001"
                         max={balanceOfALG}
-                        step="0.01"
+                        
                         value={grandparent.state.priceOfTokens}
                         onChange={grandparent.handleNormalUserInputChange}
                         required                                             
