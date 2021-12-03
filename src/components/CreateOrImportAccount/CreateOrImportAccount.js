@@ -141,7 +141,7 @@ const CreateOrImportAccount = (props) => {
       setStatus(Status.CREATE_ACCOUNT)
       setAccount(props.parent.state.account)
       setAddr(props.parent.state.account.getAddress())
-      console.log('We here')
+      
     }
   }, [props.parent.state.connectedWithMnemonic, props.parent.state.account, Status.CREATE_ACCOUNT])
 

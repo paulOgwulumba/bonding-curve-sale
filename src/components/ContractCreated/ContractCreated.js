@@ -1,5 +1,6 @@
 import React from 'react'
 import styles from './ContractCreated.module.css'
+import Loader from '../Loader/Loader'
 import { useEffect, useState } from 'react'
 
 const ContractCreated = ({ parent }) => {
@@ -16,14 +17,16 @@ const ContractCreated = ({ parent }) => {
   })
 
   return (
+    <>
     <div className={styles.container}>
       <section className="subscribe">
+        <div className={address === "0x"? styles.overlay : ''}></div>
         <section className="section-1">
           <div className="jumbotron d-flex align-items-center">
               <div className="gradient"></div>
               <div className="container content">
                   <h1>Daara Token</h1>
-                  <h2 className="text-center">Contract Created Successfully.</h2>
+                  <h2 className="text-center">{address === "0x"? "Creating contract..." : "Contract created successfully!"}</h2>
                   <p>Below are the details of the contract.</p>
 
                   <div className={`${styles.informationDiv}`}>
@@ -57,6 +60,8 @@ const ContractCreated = ({ parent }) => {
         </section> 
       </section>
     </div>
+    <Loader isLoading={address === "0x"? true : false}/>
+    </>
   )
 }
 

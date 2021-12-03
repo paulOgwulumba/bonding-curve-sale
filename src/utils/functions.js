@@ -285,6 +285,10 @@ async function connectToContract() {
     console.log('.......INTERACT.GIVEFEEDBACK.ONE.........')
     console.log(`pinging.`)
     console.log('.................................')
+    if(this.state.tracker === 3) {
+      alert("SOMETHING WENT WRONG WITH THIS TRANSACTION.")
+      this.setState({tracker: 0})
+    }
   }
 
   interact.giveFeedBack2 = () => {
@@ -297,12 +301,15 @@ async function connectToContract() {
     console.log('.......INTERACT.GIVEFEEDBACK.THREE..........')
     console.log(`ping ping ping ping.`)
     console.log('.....................................................')
+    this.setState({tracker: 3})
   }
 
   interact.giveFeedBack4 = () => {
     console.log('.......INTERACT.GIVEFEEDBACK.FOUR.........')
     console.log(`ping!!!!!!!!!!!!!!!.`)
     console.log('.................................')
+    this.setState({isLoading: false, tracker: 4})
+    alert("TRANSACTION SUCCESSFUL")
   }
 
   this.state.backend.NormalUser(contract, interact)
@@ -318,6 +325,7 @@ function buyToken(event) {
     alert(`You do not have enough tokens for this transaction. Please don't try to bite more than you can chew`)
   }
   else {
+    this.setState({isLoading: true})
     this.resolved(this.state.numberOfTokens)
   }
 }

@@ -30,6 +30,8 @@ class App extends React.Component {
     priceOfTokens: '',
     numberOfTokensBigInt: '',
 
+    tracker: 0,
+
     connectedWithMnemonic: false,
   }
 
@@ -65,6 +67,8 @@ class App extends React.Component {
       <div className="App">
         <Navbar canLogOut={this.state.canLogOut} handleLogOut={this.handleLogOut} />
         {RenderView(this, this.state.view)}
+        <div className={this.state.isLoading? 'overlay' : ''}></div>
+        <Loader isLoading={this.state.isLoading}/>
       </div>
     );
   }

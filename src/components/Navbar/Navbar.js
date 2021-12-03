@@ -7,9 +7,8 @@ const Navbar = ({ canLogOut, handleLogOut }) => {
 
     useEffect(() => {
       setClass(canLogOut? '' : styles.hide)
-      console.log(additionalClass)
     }, [canLogOut])
-    console.log(canLogOut)
+    
     return (
         <nav className="navbar navbar-expand-lg navbar-dark teal" id="myHeader">
           
