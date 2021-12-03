@@ -1,5 +1,6 @@
 // import logo from './logo.svg';
 import React from 'react'
+import Loader from './components/Loader/Loader';
 import Navbar from './components/Navbar/Navbar'
 import RenderView from './views';
 import { Views } from './utils/constants'

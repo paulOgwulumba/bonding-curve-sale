@@ -15,7 +15,7 @@ const gotHere = "got here";
  */
 const updatePrice = (totalSupply) => {
   if (totalSupply == 0) return 50000;
-  else return 50000000000000000 / totalSupply;
+  else return 500000000000000 / totalSupply;
   // return totalSupply/4
 };
 
@@ -45,7 +45,7 @@ export const main = Reach.App(() => {
   OmegaUser.publish(name);
 
   // Create token
-  const supply = 1000000000000000;
+  const supply = 10000000000000;
   const tok = new Token({ name: Bytes(32).pad('DaaraCoin'), symbol: Bytes(8).pad('DRA'), supply: supply });
   commit();
 

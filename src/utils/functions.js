@@ -274,26 +274,11 @@ async function connectToContract() {
     console.log("Waiting for User response to proceed")
     let numberOfToks = await this.getUserResponse()
     let numberOfToksParsed = this.state.reach.parseCurrency(numberOfToks)
+    let numberOfToksFormatted =  this.formatCurrency(numberOfToksParsed)
     console.log("User response gotten")
-    console.log(`Number of tokens user wants to buy: ${numberOfToksParsed}`)
+    console.log(`Number of tokens user wants to buy: ${numberOfToksFormatted}`)
     console.log('...............')
-    return [numberOfToksParsed, this.state.account.networkAccount]
-
-    // while (true) {
-    //   numberOfToks = willBuy ? await ask(`How many non-network tokens would you like to buy?`, x => fmt(stdlib.parseCurrency(x))) : 0
-    //   if (numberOfToks * price > balance) {
-    //     console.log(`You do not have enough tokens for this transaction. Please don't try to bite more than you can chew`)
-    //     continue
-    //   } else {
-    //     if (numberOfToks > supply) {
-    //       console.log(`You're asking for more tokens than are available. Check the amount of tokens then adjust your demand`)
-    //       continue
-    //     } else {
-          
-    //       break
-    //     }
-    //   }
-    // }
+    return [parseInt(numberOfToksFormatted), this.state.account.networkAccount]
   }
 
   interact.giveFeedBack1 = () => {

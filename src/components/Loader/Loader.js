@@ -12,6 +12,9 @@ const Loader = (props) => {
                     <span className={styles.circle}></span>
                 </div>
             </div>
+            <div className={styles.overlay}>
+
+            </div>
         </div>
     )
 }
