@@ -14,8 +14,8 @@ const Navbar = ({ canLogOut, handleLogOut }) => {
                 </button>
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul className="navbar-nav ml-auto">
-                        <li className={"nav-item " + additionalClass}>
-                            <button className={"nav-link "} onClick={handleLogOut} >Log Out</button>
+                        <li className={"nav-item" + additionalClass}>
+                            <button className={"btn"} onClick={handleLogOut} >Log Out</button>
                         </li>
                     </ul>
                 </div>

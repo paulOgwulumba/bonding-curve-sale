@@ -18,32 +18,43 @@ const ContractCreated = ({ parent }) => {
   return (
     <div className={styles.container}>
       <section className="subscribe">
-        <div className="container">
-          <div className="row">
-            <div className="col-md-12">
-              <div className="row">
-                <div className="col-12">
-                  <div className="heading pointer" style={{ padding: '2rem' }}>
-                    <h2>CONTRACT INFORMATION</h2>
-                    <br />
-                    <p><b>Contract Address:</b> <br /> {address}</p>
-                    <p>
-                      <b>Token Supply:</b> <br />
+        <section className="section-1">
+          <div className="jumbotron d-flex align-items-center">
+              <div className="gradient"></div>
+              <div className="container content">
+                  <h1>Daara Token</h1>
+                  <h2 className="text-center">Contract Created Successfully.</h2>
+                  <p>Below are the details of the contract.</p>
+
+                  <div className={`${styles.informationDiv}`}>
+                    <p className={`${styles.title}`} style={{color: "rgba(0, 0, 0, 0.7)"}}>
+                      Contract Address
+                    </p>
+                    <p className={`${styles.info}`}>
+                      {address}
+                    </p>
+                  </div>
+
+                  <div className={`${styles.informationDiv}`}>
+                    <p className={`${styles.title}`} style={{color: "rgba(0, 0, 0, 0.7)"}}>
+                      Daara Token Current Supply
+                    </p>
+                    <p className={`${styles.info}`}>
                       {parent.formatCurrency(parent.state.supply) || 0}
                     </p>
-                    <p>
-                      <b>Token Current Price:</b> <br />
+                  </div>
+
+                  <div className={`${styles.informationDiv}`}>
+                    <p className={`${styles.title}`} style={{color: "rgba(0, 0, 0, 0.7)"}}>
+                      Daara Token Current Price
+                    </p>
+                    <p className={`${styles.info}`}>
                       {(parent.state.price)}
                     </p>
                   </div>
-                </div>
-                <div className="col-12">
-                  
-                </div>
-              </div>
-            </div>
+              </div>                                                   
           </div>
-        </div>
+        </section> 
       </section>
 
     </div>

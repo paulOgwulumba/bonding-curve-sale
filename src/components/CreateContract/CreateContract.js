@@ -23,32 +23,39 @@ const CreateContract = ({ parent }) => {
   return (
     <div className={styles.container}>
       <section className="subscribe">
-        <div className="container">
-          <div className="row">
-            <div className="col-md-12">
-              <div className="row">
-                <div className="col-12">
-                  <div className="heading pointer" style={{ padding: '2rem' }}>
-                    <h2>CREATE NEW CONTRACT</h2>
-                    <br />
-                    <p><b>Your Public Address:</b> <br /> {parent.state.account.getAddress ? parent.state.account.getAddress() : ''}</p>
-                    <p>
-                      <b>Your Token Balance:</b> <br />
+        <section className="section-1">
+          <div className="jumbotron d-flex align-items-center">
+              <div className="gradient"></div>
+              <div className="container content">
+                  <h1>Daara Token</h1>
+                  <h2 className="text-center">Create new contract.</h2>
+                  <div className={`${styles.informationDiv}`}>
+                    <p className={`${styles.title}`} style={{color: "rgba(0, 0, 0, 0.7)"}}>
+                      Your Public Address
+                    </p>
+                    <p className={`${styles.info}`}>
+                      {parent.state.account.getAddress ? parent.state.account.getAddress() : ''}
+                    </p>
+                  </div>
+                  <div className={`${styles.informationDiv}`}>
+                    <p className={`${styles.title}`} style={{color: "rgba(0, 0, 0, 0.7)"}}>
+                      Your Token Balance
+                    </p>
+                    <p className={`${styles.info}`}>
                       {balance}
                     </p>
                   </div>
-                </div>
-                <div className="col-12">
-                  <button className={`btn btn-primary ${styles.spacing}`} onClick={() => parent.createContract()}>
-                    Create Contract
-                  </button>
-                </div>
-              </div>
-            </div>
+                  <p className="text-center" style={{marginTop: "20px"}}>
+                    <button className="btn btn-default" onClick={() => parent.createContract()}>
+                      Create Contract
+                    </button>
+                  </p>
+              </div>                                                   
           </div>
-        </div>
+        </section> 
       </section>
 
+      
     </div>
   )
 }
