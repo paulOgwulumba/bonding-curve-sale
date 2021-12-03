@@ -28,6 +28,7 @@ class App extends React.Component {
     token: {},
     numberOfTokens: '',
     priceOfTokens: '',
+    numberOfTokensBigInt: '',
 
     connectedWithMnemonic: false,
   }

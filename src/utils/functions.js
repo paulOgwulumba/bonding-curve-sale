@@ -71,12 +71,12 @@ function handleOmegaInputChange(event) {
    let numberOfTokens, priceOfTokens
    if(event.target.name === 'numberOfTokens') {
       numberOfTokens = event.target.value;
-      priceOfTokens = numberOfTokens === 0? 0 : numberOfTokens * this.state.price
+      priceOfTokens = numberOfTokens === 0? 0 : (numberOfTokens) * (this.state.price)
    }
 
    if (event.target.name === 'priceOfTokens') {
       priceOfTokens = event.target.value;
-      numberOfTokens = priceOfTokens === 0 ? 0 : priceOfTokens / this.state.price
+      numberOfTokens = priceOfTokens === 0 ? 0 : (priceOfTokens) / (this.state.price)
    }
 
    if(priceOfTokens > this.state.reach.balanceOf(this.state.account)  || numberOfTokens > this.formatCurrency(this.state.supply)){} 
