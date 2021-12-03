@@ -222,18 +222,36 @@ const CreateOrImportAccount = (props) => {
                   </div>
 
                   <div className={status === Status.CREATE_ACCOUNT ? '' : styles.hide}>
-                    <div className="col-md-12">
-                      <div className="heading pointer" style={{ padding: '2rem' }}>
-                        <h2>New Account Created Successfully!</h2>
-                        <br />
-                        <p><b>Public Address:</b> <br /> {addr}</p>
+                    <section className="section-1">
+                      <div className="jumbotron d-flex align-items-center">
+                          <div className="gradient"></div>
+                          <div className="container content">
+                              <h1>Daara Token</h1>
+                              <h2 className="text-center">Account created successfully.</h2>
+                              <p>Your new account was created successfully. Below are the details of the account.</p>
+
+                              <div className={`${styles.informationDiv}`}>
+                                <p className={`${styles.title}`} style={{color: "rgba(0, 0, 0, 0.7)"}}>
+                                  Public Address
+                                </p>
+                                <p className={`${styles.info}`}>
+                                  {addr}
+                                </p>
+                              </div>
+
+                              <div className={`${styles.informationDiv}`}>
+                                <p className={`${styles.title}`} style={{color: "rgba(0, 0, 0, 0.7)"}}>
+                                  Account Balance in ALG
+                                </p>
+                                <p className={`${styles.info}`}>
+                                  {props.parent.reach? props.parent.formatCurrency(props.parent.state.reach.balanceOf(account)) : 0}
+                                </p>
+                              </div>
+
+                              
+                          </div>                                                   
                       </div>
-                    </div>
-                    <div className="col-12">
-                      <button className={`btn btn-primary ${styles.spacing}`} onClick={() => props.parent.addAccount(account)}>
-                        Continue
-                      </button>
-                    </div>
+                    </section> 
                   </div>
                 </div>
               </div>

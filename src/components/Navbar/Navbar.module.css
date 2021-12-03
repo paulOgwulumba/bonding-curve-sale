@@ -1,3 +1,19 @@
 .hide {
   display: none;
 }
+
+.btn {
+  background-color: #f7da17;
+  color: black;
+  padding: 12px 15px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+.btn:hover {
+  background: transparent;
+  border: 1px solid #f7da17 ;
+  color: white;
+}

@@ -56,7 +56,6 @@ const ContractCreated = ({ parent }) => {
           </div>
         </section> 
       </section>
-
     </div>
   )
 }

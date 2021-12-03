@@ -273,11 +273,11 @@ async function connectToContract() {
     console.log("....INTERACT.BUYTOKEN......")
     console.log("Waiting for User response to proceed")
     let numberOfToks = await this.getUserResponse()
-    numberOfToks = this.state.reach.parseCurrency(numberOfToks)
+    let numberOfToksParsed = this.state.reach.parseCurrency(numberOfToks)
     console.log("User response gotten")
-    console.log(`Number of tokens user wants to buy: ${numberOfToks}`)
+    console.log(`Number of tokens user wants to buy: ${numberOfToksParsed}`)
     console.log('...............')
-    return [(numberOfToks), this.state.account.networkAccount]
+    return [numberOfToksParsed, this.state.account.networkAccount]
 
     // while (true) {
     //   numberOfToks = willBuy ? await ask(`How many non-network tokens would you like to buy?`, x => fmt(stdlib.parseCurrency(x))) : 0

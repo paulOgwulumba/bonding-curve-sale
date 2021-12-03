@@ -222,7 +222,7 @@ header h6 {
 
 nav {
     margin-top: .3rem;
-    background-color: #f7da17 !important;
+    background-color: #343a40 !important;
     opacity: 1;
     -webkit-box-shadow: 0 4px 4px -2px rgba(0, 0, 0, 0.1607843137254902);
     -moz-box-shadow: 0 4px 4px -2px rgba(0, 0, 0, 0.1607843137254902);
@@ -236,9 +236,9 @@ nav:before {
 }
 
 nav .logo-text {
-    font-size: 50px;
+    font-size: 45px;
     padding-bottom: 30px;
-    color: rgba(24, 23, 23);
+    color: #f7da17;
     font-family: 'Changa One', cursive;
 }
 
