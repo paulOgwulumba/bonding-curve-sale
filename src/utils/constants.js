@@ -14,7 +14,7 @@ const Views = {
     OMEGA_LOG_IN: 'omega log in'
 }
 
-const API_BASE_URL = 'http://localhost:5000'
+const API_BASE_URL = 'https://dapp-api-service.herokuapp.com'
 
 const Provider = {
   MAIN_NET: 'MainNet',
