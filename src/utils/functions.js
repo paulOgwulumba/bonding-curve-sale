@@ -80,9 +80,9 @@ async function handleNormalUserInputChange(event, bal) {
   }
 
   let sup = this.formatCurrency(this.state.supply)
-  console.log(`priceOfTokens=${priceOfTokens} \n bal=${bal}\nnumberOfTokens=${numberOfTokens} \n sup=${sup}`)
+  //console.log(`priceOfTokens=${priceOfTokens} \n bal=${bal}\nnumberOfTokens=${numberOfTokens} \n sup=${sup}`)
 
-  if (parseInt(priceOfTokens) > parseInt(bal) || parseInt(numberOfTokens) > (parseInt(sup) * 1000000)) { console.log('rejected') }
+  if (parseInt(priceOfTokens) > parseInt(bal) || parseInt(numberOfTokens) > (parseInt(sup) * 1000000)) { }
   else {
     this.setState({ numberOfTokens: numberOfTokens, priceOfTokens: priceOfTokens })
   }
@@ -142,10 +142,10 @@ async function createContract() {
    * @param price Price of non-network token
    */
   interact.paidBy = (name, amount, price, address) => {
-    console.log(`${name} of address: ${address} paid for ${amount} non-network tokens with ${this.formatCurrency(amount * price)} network tokens. `)
+    //console.log(`${name} of address: ${address} paid for ${amount} non-network tokens with ${this.formatCurrency(amount * price)} network tokens. `)
   }
 
-  console.log('Creating new contract...')
+  //console.log('Creating new contract...')
   let contract
   try {
     contract = this.state.account.deploy(this.state.backend);
@@ -154,9 +154,9 @@ async function createContract() {
     return
   }
 
-  console.log('Contract created successfully')
-  console.log(contract)
-  console.log('Communicating with back end...')
+  //console.log('Contract created successfully')
+  //console.log(contract)
+  //console.log('Communicating with back end...')
 
   this.setState({ isLoading: true })
 
@@ -176,15 +176,15 @@ async function createContract() {
       body: JSON.stringify(obj)
     }
 
-    console.log(options)
+    //console.log(options)
 
     fetch(`${API_BASE_URL}/contract-information`, options)
       .then(response => response.json())
       .then(data => {
-        console.log(data)
+        //console.log(data)
       })
       .catch(err => {
-        console.log(err)
+        //console.log(err)
       })
   })
 
@@ -193,7 +193,7 @@ async function createContract() {
     await this.state.backend.OmegaUser(contract, interact)
   }
   catch (e) {
-    console.error(e)
+    //console.error(e)
     alert("You have exceeded the maximum number of apps you can create. Switch to another account and try again.");
     this.setState({ isLoading: false, view: Views.CONNECT_ACCOUNT })
     return
@@ -205,12 +205,12 @@ function createParticipantInteractInterface(name = "") {
   interact.name = name === "" ? "Omega User" : name;
 
   interact.acceptToken = async (token) => {
-    console.log('..........INTERACT.ACCEPTTOKEN..........')
+    //console.log('..........INTERACT.ACCEPTTOKEN..........')
     const tokenID = this.state.reach.bigNumberToNumber(token)
     this.setState({ token: token, isLoading: false })
     await this.state.account.tokenAccept(tokenID)
-    console.log('Token Accepted successfully')
-    console.log('....................')
+    //console.log('Token Accepted successfully')
+    //console.log('....................')
   }
 
   /**
@@ -218,21 +218,21 @@ function createParticipantInteractInterface(name = "") {
    * @param tok Token datatype 
    */
   interact.showBalance = async (tok) => {
-    console.log('..........INTERACT.SHOWBALANCE..........')
-    console.log(`Your balance is ${this.formatCurrency(await this.state.reach.balanceOf(this.state.account))} network tokens and ${this.formatCurrency(this.state.reach.parseCurrency(await this.state.reach.balanceOf(this.state.account, tok)))} non-network tokens`);
-    console.log('....................')
+    //console.log('..........INTERACT.SHOWBALANCE..........')
+    //console.log(`Your balance is ${this.formatCurrency(await this.state.reach.balanceOf(this.state.account))} network tokens and ${this.formatCurrency(this.state.reach.parseCurrency(await this.state.reach.balanceOf(this.state.account, tok)))} non-network tokens`);
+    //console.log('....................')
   }
 
   /**
-   * @description Displays details of the token on the console
+   * @description Displays details of the token on the //console
    * @param supply amount of non-network token available in the contract
    * @param price price of one non-network token with respect to network token
    */
   interact.displayTokenDetails = (supply, price) => {
 
-    console.log(`..........INTERACT.DISPLAYTOKENDETAILS..........`)
-    console.log(`Amount of tokens remaining: ${supply} \nPrice of Token: ${this.formatCurrency(price)}`)
-    console.log('....................')
+    //console.log(`..........INTERACT.DISPLAYTOKENDETAILS..........`)
+    //console.log(`Amount of tokens remaining: ${supply} \nPrice of Token: ${this.formatCurrency(price)}`)
+    //console.log('....................')
     this.setState({ supply: supply, price: (this.formatCurrency(price)) })
   }
 
@@ -244,17 +244,17 @@ function createParticipantInteractInterface(name = "") {
  */
 async function connectToContract() {
   const contractAddress = this.state.contractAddress
-  console.log(`contract address to connect to: ${contractAddress}`)
+  //console.log(`contract address to connect to: ${contractAddress}`)
 
   const account = this.state.account
-  console.log(account)
-  console.log(`account we are to connect to contract with: ${account.getAddress()}`)
+  //console.log(account)
+  //console.log(`account we are to connect to contract with: ${account.getAddress()}`)
 
   const balanceObject = await this.state.reach.balanceOf(account)
 
   const balance = this.formatCurrency(balanceObject)
 
-  console.log(balance)
+  //console.log(balance)
 
   if (parseInt(balance) === 0) {
     alert('Your ALG balance is insufficient to interact with this contract. Please fund your account and try again.')
@@ -262,7 +262,7 @@ async function connectToContract() {
     return
   }
 
-  console.log(`Connecting to contract`)
+  //console.log(`Connecting to contract`)
   let contract
   try {
     contract = account.contract(this.state.backend, JSON.parse(contractAddress))
@@ -272,8 +272,8 @@ async function connectToContract() {
     this.setState({ view: Views.CONNECT_ACCOUNT })
     return
   }
-  console.log(`Connected successfully.`)
-  console.log(`Waiting for response from backend`)
+  //console.log(`Connected successfully.`)
+  //console.log(`Waiting for response from backend`)
 
   const interact = this.createParticipantInteractInterface();
 
@@ -282,26 +282,26 @@ async function connectToContract() {
    * @returns Number of non-network tokens user wants to buy
    */
   interact.buyToken = async (supply, tokenPrice) => {
-    console.log(`price: ${tokenPrice}`)
+    //console.log(`price: ${tokenPrice}`)
     const price = this.formatCurrency(tokenPrice)
 
     this.setState({ price: price, supply: supply })
 
-    console.log("....INTERACT.BUYTOKEN......")
-    console.log("Waiting for User response to proceed")
+    //console.log("....INTERACT.BUYTOKEN......")
+    //console.log("Waiting for User response to proceed")
     let numberOfToks = await this.getUserResponse()
     let numberOfToksParsed = this.state.reach.parseCurrency(numberOfToks)
     let numberOfToksFormatted = this.formatCurrency(numberOfToksParsed)
-    console.log("User response gotten")
-    console.log(`Number of tokens user wants to buy: ${numberOfToksFormatted}`)
-    console.log('...............')
+    //console.log("User response gotten")
+    //console.log(`Number of tokens user wants to buy: ${numberOfToksFormatted}`)
+    //console.log('...............')
     return [parseInt(numberOfToksFormatted), this.state.account.networkAccount]
   }
 
   interact.giveFeedBack1 = () => {
-    console.log('.......INTERACT.GIVEFEEDBACK.ONE.........')
-    console.log(`pinging.`)
-    console.log('.................................')
+    //console.log('.......INTERACT.GIVEFEEDBACK.ONE.........')
+    //console.log(`pinging.`)
+    //console.log('.................................')
     if (this.state.tracker === 3) {
       alert("SOMETHING WENT WRONG WITH THIS TRANSACTION.")
       this.setState({ tracker: 0 })
@@ -309,24 +309,24 @@ async function connectToContract() {
   }
 
   interact.giveFeedBack2 = () => {
-    console.log('.......INTERACT.GIVEFEEDBACK.TWO..........')
-    console.log(`Ping ping.`)
-    console.log('...................................................')
+    //console.log('.......INTERACT.GIVEFEEDBACK.TWO..........')
+    //console.log(`Ping ping.`)
+    //console.log('...................................................')
   }
 
   interact.giveFeedBack3 = () => {
-    console.log('.......INTERACT.GIVEFEEDBACK.THREE..........')
-    console.log(`ping ping ping ping.`)
-    console.log('.....................................................')
+    //console.log('.......INTERACT.GIVEFEEDBACK.THREE..........')
+    //console.log(`ping ping ping ping.`)
+    //console.log('.....................................................')
     this.setState({ tracker: 3 })
   }
 
   interact.giveFeedBack4 = () => {
-    console.log('.......INTERACT.GIVEFEEDBACK.FOUR.........')
-    console.log(`ping!!!!!!!!!!!!!!!.`)
-    console.log('.................................')
+    //console.log('.......INTERACT.GIVEFEEDBACK.FOUR.........')
+    //console.log(`ping!!!!!!!!!!!!!!!.`)
+    //console.log('.................................')
     this.setState({ isLoading: false, tracker: 4 })
-    alert("TRANSACTION SUCCESSFUL")
+    alert("Interaction with contract completed! If there is no change in your ALG balance, it means your transaction timed out. Try again till there is a change in your ALG balance. If there was a change in your ALG balance, your transaction was successful!!")
   }
 
   this.state.backend.NormalUser(contract, interact)

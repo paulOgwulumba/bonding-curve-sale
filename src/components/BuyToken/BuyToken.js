@@ -98,7 +98,7 @@ const BuyToken = ({ parent, grandparent }) => {
                     <input
                       type="number"
                       placeholder="Cost in ALG"
-
+                      disabled={true}
 
 
                       value={grandparent.state.priceOfTokens}
