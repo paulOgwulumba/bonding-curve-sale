@@ -4,7 +4,6 @@ import styles from './BuyToken.module.css'
 
 const BuyToken = ({ parent, grandparent }) => {
   const [balanceOfALG, setBalanceOfALG] = useState(0)
-  const [balanceOfDAR, setBalanceOfDAR] = useState(0)
   const [supply, setSupply] = useState(0)
   const [price, setPrice] = useState(0)
 
@@ -23,31 +22,27 @@ const BuyToken = ({ parent, grandparent }) => {
         return unparsedSupply
       }
 
-      const getBalOfDar = async () => {
-        return await grandparent.state.reach.balanceOf(grandparent.state.account, grandparent.state.token)
-      }
       let balance = await getBal()
-      let balanceDAR = await getBalOfDar()
+
       let sup = await getSupply()
-      return [grandparent.formatCurrency(balance), grandparent.formatCurrency(sup), grandparent.formatCurrency(balanceDAR)]
+      return [grandparent.formatCurrency(balance), grandparent.formatCurrency(sup)]
     }
 
     const doing = async () => {
-      let [bal, sup, balanceDAR] = await getTokenBalance()
+      let [bal, sup] = await getTokenBalance()
       setBalanceOfALG(bal)
       setSupply(sup)
-      setBalanceOfDAR(balanceDAR)
     }
     doing()
 
     setPrice(grandparent.state.price)
-  }, [grandparent.state.supply, grandparent.state.price, grandparent.state.reach, grandparent.state.account, grandparent.state.token])
+  }, [grandparent, grandparent.state.supply, grandparent.state.price, grandparent.state.reach, grandparent.state.account, grandparent.state.token])
 
   return (
     <>
       <div className={styles.container}>
         <section className="subscribe">
-          <div className={supply == 0 && price == 0 ? styles.overlay : ''}></div>
+          <div className={parseInt(supply) === 0 && parseInt(price) === 0 ? styles.overlay : ''}></div>
           <section className="section-1">
             <div className="jumbotron d-flex align-items-center">
               <div className="gradient"></div>
@@ -125,7 +120,7 @@ const BuyToken = ({ parent, grandparent }) => {
       </div>
 
       <Loader isLoading={
-        supply == 0 & price == 0 ? true : false
+        parseInt(supply) === 0 & parseInt(price) === 0 ? true : false
       } />
     </>
   )

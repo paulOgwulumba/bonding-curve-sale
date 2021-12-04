@@ -256,7 +256,7 @@ async function connectToContract() {
 
   console.log(balance)
 
-  if (balance == 0) {
+  if (parseInt(balance) === 0) {
     alert('Your ALG balance is insufficient to interact with this contract. Please fund your account and try again.')
     this.setState({ view: Views.CONNECT_ACCOUNT })
     return
