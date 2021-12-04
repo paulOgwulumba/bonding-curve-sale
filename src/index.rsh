@@ -14,9 +14,12 @@ const gotHere = "got here";
  * @returns Price of non-network token w.r.t network token
  */
 const updatePrice = (totalSupply) => {
-  if (totalSupply == 0) return 50000;
-  else return 500000000000000 / totalSupply;
-  // return totalSupply/4
+  const adjusted = totalSupply / 1000000;
+  const adjustedToPower3 = adjusted * adjusted * adjusted;
+  return 70 + (10000000 / adjustedToPower3);
+  // const adjusted = totalSupply / 17;
+  // if (totalSupply == 0) return 50000;
+  // else return (500000 / sqrt(adjusted, 10));
 };
 
 export const main = Reach.App(() => {
@@ -45,8 +48,8 @@ export const main = Reach.App(() => {
   OmegaUser.publish(name);
 
   // Create token
-  const supply = 100000000000;
-  const tok = new Token({ name: Bytes(32).pad('DaaraCoin'), symbol: Bytes(8).pad('DRA'), supply: supply });
+  const supply = 50000000;
+  const tok = new Token({ name: Bytes(32).pad('Daara Token'), symbol: Bytes(8).pad('DAR'), supply: supply });
   commit();
 
   //Display minted token's supply and price to Omega user
@@ -86,7 +89,7 @@ export const main = Reach.App(() => {
         continue;
       });
 
-                                                                 //here
+    //here
     //OmegaUser.interact.paidBy(normalName, buyTok, newPrice, normalUserAccount)
     require(this == normalUserAccount);
 

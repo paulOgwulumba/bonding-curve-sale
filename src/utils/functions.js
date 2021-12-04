@@ -8,12 +8,12 @@ function fetchContractInformation() {
     .then(response => response.json())
     .then(async data => {
       let newView = !data.isContract ? Views.OMEGA_LOG_IN : Views.CONNECT_ACCOUNT
-      
-      this.setState({ 
-        view: newView, 
-        user: newView === Views.OMEGA_LOG_IN? User.OMEGA_USER : User.NORMAL_USER,
-        contract: data.isContract? data.contract.contract : this.state.contract,
-        contractAddress: data.isContract? data.contract.address : this.state.contractAddress
+
+      this.setState({
+        view: newView,
+        user: newView === Views.OMEGA_LOG_IN ? User.OMEGA_USER : User.NORMAL_USER,
+        contract: data.isContract ? data.contract.contract : this.state.contract,
+        contractAddress: data.isContract ? data.contract.address : this.state.contractAddress
       })
     })
     .catch(e => {
@@ -67,23 +67,26 @@ function handleOmegaInputChange(event) {
  * @desc This handles the event triggered when a normal user enters their username or password
  * @param {*} event 
  */
- function handleNormalUserInputChange(event) {
-   let numberOfTokens, priceOfTokens
-   if(event.target.name === 'numberOfTokens') {
-      numberOfTokens = event.target.value;
-      priceOfTokens = numberOfTokens === 0? 0 : (numberOfTokens) * (this.state.price)
-   }
+async function handleNormalUserInputChange(event, bal) {
+  let numberOfTokens, priceOfTokens
+  if (event.target.name === 'numberOfTokens') {
+    numberOfTokens = event.target.value;
+    priceOfTokens = numberOfTokens === 0 ? 0 : (numberOfTokens) * ((this.state.price))
+  }
 
-   if (event.target.name === 'priceOfTokens') {
-      priceOfTokens = event.target.value;
-      numberOfTokens = priceOfTokens === 0 ? 0 : (priceOfTokens) / (this.state.price)
-   }
+  if (event.target.name === 'priceOfTokens') {
+    priceOfTokens = event.target.value;
+    numberOfTokens = priceOfTokens === 0 ? 0 : (priceOfTokens) / ((this.state.price))
+  }
 
-   if(priceOfTokens > this.state.reach.balanceOf(this.state.account)  || numberOfTokens > this.formatCurrency(this.state.supply)){} 
-   else {
+  let sup = this.formatCurrency(this.state.supply)
+  console.log(`priceOfTokens=${priceOfTokens} \n bal=${bal}\nnumberOfTokens=${numberOfTokens} \n sup=${sup}`)
+
+  if (parseInt(priceOfTokens) > parseInt(bal) || parseInt(numberOfTokens) > (parseInt(sup) * 1000000)) { console.log('rejected') }
+  else {
     this.setState({ numberOfTokens: numberOfTokens, priceOfTokens: priceOfTokens })
-   }
-  
+  }
+
 }
 
 /**
@@ -106,8 +109,8 @@ function handleLogOut() {
 async function connectDefaultAccount() {
   try {
     let acct = await this.state.reach.getDefaultAccount();
-    let currentView = this.state.user === User.OMEGA_USER? Views.CREATE_CONTRACT : Views.BUY_TOKEN_VIEW;
-    this.setState({ account: acct, hasDefaultAccount: true, view: currentView});
+    let currentView = this.state.user === User.OMEGA_USER ? Views.CREATE_CONTRACT : Views.BUY_TOKEN_VIEW;
+    this.setState({ account: acct, hasDefaultAccount: true, view: currentView });
     return true
   }
   catch (error) {
@@ -122,9 +125,9 @@ async function connectDefaultAccount() {
  * @param {*} account contract object to be added to application
  * @param {Boolean} connectedWithMnemonic specifies if the account to be added was imorted with the use of a mnemonic key phrase or not.
  */
-function addAccount(account, connectedWithMnemonic=false) {
-  
-  let currentView = this.state.user === User.OMEGA_USER? Views.CREATE_CONTRACT : Views.BUY_TOKEN_VIEW;
+function addAccount(account, connectedWithMnemonic = false) {
+
+  let currentView = this.state.user === User.OMEGA_USER ? Views.CREATE_CONTRACT : Views.BUY_TOKEN_VIEW;
 
   this.setState({ account: account, view: currentView, connectedWithMnemonic: connectedWithMnemonic })
 }
@@ -143,15 +146,22 @@ async function createContract() {
   }
 
   console.log('Creating new contract...')
-  const contract = this.state.account.deploy(this.state.backend);
+  let contract
+  try {
+    contract = this.state.account.deploy(this.state.backend);
+  } catch (e) {
+    alert("Unable to create contract. Fund your account and try again.")
+    return
+  }
+
   console.log('Contract created successfully')
   console.log(contract)
   console.log('Communicating with back end...')
 
-  this.setState({isLoading: true })
+  this.setState({ isLoading: true })
 
   contract.getInfo().then(info => {
-    this.setState({contractAddress: JSON.stringify(info), contract: contract, })
+    this.setState({ contractAddress: JSON.stringify(info), contract: contract, })
 
     let obj = {
       contract: JSON.stringify(contract),
@@ -169,26 +179,24 @@ async function createContract() {
     console.log(options)
 
     fetch(`${API_BASE_URL}/contract-information`, options)
-    .then(response => response.json())
-    .then(data => {
-      console.log(data)
-    })
-    .catch(err => {
-      console.log(err)
-    })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
+      })
+      .catch(err => {
+        console.log(err)
+      })
   })
-  
-  
+
+
   try {
-    
     await this.state.backend.OmegaUser(contract, interact)
-    // const contractAddress = await contract.getInfo()
-    // console.log(contractAddress)
-    // this.setState({contractAddress: contractAddress})
   }
-  catch(e) {
+  catch (e) {
     console.error(e)
-    alert("Insufficied tokens in wallet to create contract")
+    alert("You have exceeded the maximum number of apps you can create. Switch to another account and try again.");
+    this.setState({ isLoading: false, view: Views.CONNECT_ACCOUNT })
+    return
   }
 }
 
@@ -199,7 +207,7 @@ function createParticipantInteractInterface(name = "") {
   interact.acceptToken = async (token) => {
     console.log('..........INTERACT.ACCEPTTOKEN..........')
     const tokenID = this.state.reach.bigNumberToNumber(token)
-    this.setState({token: token})
+    this.setState({ token: token, isLoading: false })
     await this.state.account.tokenAccept(tokenID)
     console.log('Token Accepted successfully')
     console.log('....................')
@@ -221,11 +229,11 @@ function createParticipantInteractInterface(name = "") {
    * @param price price of one non-network token with respect to network token
    */
   interact.displayTokenDetails = (supply, price) => {
-    
+
     console.log(`..........INTERACT.DISPLAYTOKENDETAILS..........`)
     console.log(`Amount of tokens remaining: ${supply} \nPrice of Token: ${this.formatCurrency(price)}`)
     console.log('....................')
-    this.setState({supply: supply, price: (this.formatCurrency(price))})
+    this.setState({ supply: supply, price: (this.formatCurrency(price)) })
   }
 
   return interact
@@ -250,12 +258,20 @@ async function connectToContract() {
 
   if (balance == 0) {
     alert('Your ALG balance is insufficient to interact with this contract. Please fund your account and try again.')
-    this.setState({view: Views.CONNECT_ACCOUNT})
+    this.setState({ view: Views.CONNECT_ACCOUNT })
     return
-  } 
+  }
 
   console.log(`Connecting to contract`)
-  const contract = account.contract(this.state.backend, JSON.parse(contractAddress))
+  let contract
+  try {
+    contract = account.contract(this.state.backend, JSON.parse(contractAddress))
+  }
+  catch (error) {
+    alert("You cannot connect to this contract with your account. Please try another account.");
+    this.setState({ view: Views.CONNECT_ACCOUNT })
+    return
+  }
   console.log(`Connected successfully.`)
   console.log(`Waiting for response from backend`)
 
@@ -266,15 +282,16 @@ async function connectToContract() {
    * @returns Number of non-network tokens user wants to buy
    */
   interact.buyToken = async (supply, tokenPrice) => {
+    console.log(`price: ${tokenPrice}`)
     const price = this.formatCurrency(tokenPrice)
 
-    this.setState({price: price, supply: supply})
+    this.setState({ price: price, supply: supply })
 
     console.log("....INTERACT.BUYTOKEN......")
     console.log("Waiting for User response to proceed")
     let numberOfToks = await this.getUserResponse()
     let numberOfToksParsed = this.state.reach.parseCurrency(numberOfToks)
-    let numberOfToksFormatted =  this.formatCurrency(numberOfToksParsed)
+    let numberOfToksFormatted = this.formatCurrency(numberOfToksParsed)
     console.log("User response gotten")
     console.log(`Number of tokens user wants to buy: ${numberOfToksFormatted}`)
     console.log('...............')
@@ -285,9 +302,9 @@ async function connectToContract() {
     console.log('.......INTERACT.GIVEFEEDBACK.ONE.........')
     console.log(`pinging.`)
     console.log('.................................')
-    if(this.state.tracker === 3) {
+    if (this.state.tracker === 3) {
       alert("SOMETHING WENT WRONG WITH THIS TRANSACTION.")
-      this.setState({tracker: 0})
+      this.setState({ tracker: 0 })
     }
   }
 
@@ -301,31 +318,34 @@ async function connectToContract() {
     console.log('.......INTERACT.GIVEFEEDBACK.THREE..........')
     console.log(`ping ping ping ping.`)
     console.log('.....................................................')
-    this.setState({tracker: 3})
+    this.setState({ tracker: 3 })
   }
 
   interact.giveFeedBack4 = () => {
     console.log('.......INTERACT.GIVEFEEDBACK.FOUR.........')
     console.log(`ping!!!!!!!!!!!!!!!.`)
     console.log('.................................')
-    this.setState({isLoading: false, tracker: 4})
+    this.setState({ isLoading: false, tracker: 4 })
     alert("TRANSACTION SUCCESSFUL")
   }
 
   this.state.backend.NormalUser(contract, interact)
 }
 
-function buyToken(event) {
+function buyToken(event, balance) {
   event.preventDefault()
 
-  if(this.state.numberOfTokens > this.state.supply){
+  if (this.state.numberOfTokens > parseInt(this.formatCurrency(this.state.supply)) * 1000000) {
     alert(`You're asking for more tokens than are available. Check the amount of tokens then adjust your demand`)
   }
-  else if (this.state.priceOfTokens > this.state.reach.balanceOf(this.state.account)) {
+  else if (this.state.priceOfTokens > balance) {
     alert(`You do not have enough tokens for this transaction. Please don't try to bite more than you can chew`)
   }
+  else if (this.state.numberOfTokens < 0 || this.state.priceOfTokens < 0) {
+    alert('Negative values are not allowed.')
+  }
   else {
-    this.setState({isLoading: true})
+    this.setState({ isLoading: true })
     this.resolved(this.state.numberOfTokens)
   }
 }
@@ -335,8 +355,8 @@ function buyToken(event) {
  * @param amount Amount of currency to be formatted.
  * @returns Formatted number.
  */
- function formatCurrency(amount) {
-  return this.state.reach.formatCurrency(amount, 8);
+function formatCurrency(amount) {
+  return this.state.reach.formatCurrency(amount, 10);
 }
 
 export {

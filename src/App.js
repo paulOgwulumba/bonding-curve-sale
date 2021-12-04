@@ -25,7 +25,7 @@ class App extends React.Component {
     canLogOut: false,
     omegaDetailsAreCorrect: true,
 
-    token: {},
+    token: null,
     numberOfTokens: '',
     priceOfTokens: '',
     numberOfTokensBigInt: '',
@@ -67,8 +67,8 @@ class App extends React.Component {
       <div className="App">
         <Navbar canLogOut={this.state.canLogOut} handleLogOut={this.handleLogOut} />
         {RenderView(this, this.state.view)}
-        <div className={this.state.isLoading? 'overlay' : ''}></div>
-        <Loader isLoading={this.state.isLoading}/>
+        <div className={this.state.isLoading ? 'overlay' : ''}></div>
+        <Loader isLoading={this.state.isLoading} />
       </div>
     );
   }
