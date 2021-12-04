@@ -19,9 +19,10 @@ const Logger = {
  * @returns Price of non-network token w.r.t network token
  */
 const updatePrice = (totalSupply) => {
+  const adjusted = totalSupply/17;
   if(totalSupply == 0) return 50000;
-  else return 50000000000/totalSupply;
-  // return totalSupply/4
+  else return (5000000/sqrt(adjusted, 10));
+  
 };
 
 export const main = Reach.App(() => {
@@ -47,7 +48,7 @@ export const main = Reach.App(() => {
   OmegaUser.publish(name);
 
   // Create token
-  const supply = 10000;
+  const supply = 10000000000;
   const tok = new Token({ name: '01234567890123456789012345678901', symbol: '01234567', supply: supply});
   commit();
 
