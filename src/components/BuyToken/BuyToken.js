@@ -10,14 +10,11 @@ const BuyToken = ({ parent, grandparent }) => {
 
   useEffect(() => {
     const getTokenBalance = async () => {
-      // Gets balance of users network tokens
+      // Gets balance of user's network tokens
       const getBal = async () => {
         return await grandparent.state.reach.balanceOf(grandparent.state.account);
       }
       const getSupply = async () => {
-        // let unparsedSupply = grandparent.state.token ?
-        //   await grandparent.state.reach.balanceOf(grandparent.state.contract, grandparent.state.token) :
-        //   grandparent.state.supply;
         let unparsedSupply = grandparent.state.supply
         return unparsedSupply
       }
